@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>注册</title>
+<!-- 页面作者：YangYuxuan -->
+<!-- for-mobile-apps -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="keywords" content="" />
+<script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false);
+		function hideURLbar(){ window.scrollTo(0,1); } </script>
+<!-- //for-mobile-apps -->
+<link href="css/bootstrap.css" rel="stylesheet" type="text/css" media="all" />
+<link href="css/style.css" rel="stylesheet" type="text/css" media="all" />
+<!-- font-awesome icons -->
+<link href="css/font-awesome.css" rel="stylesheet"> 
+<!-- //font-awesome icons -->
+
+
+<!-- 页内css样式修改 -->
+<style type="text/css">
+
+
+	/* 查看服务协议a标签 */
+	#serviceContract{
+		margin-left: 3.875rem;
+		display: inline;
+		font-size: 0.75rem;
+	}
+	/* 验证码输入框 */
+	#CAPTCHA{
+		width: 50%;
+		display: inline;
+	}
+	/* 验证码div */
+	#getCode{
+
+	}
+	#submit2{
+		transition: .5s ease-in;
+		-webkit-transition: .5s ease-in;
+		-moz-transition: .5s ease-in;
+		-o-transition: .5s ease-in;
+		-ms-transition: .5s ease-in;
+		-webkit-appearance: button;
+		cursor: pointer;
+		width: 100%;
+		border-radius: 8px;
+		background-color: #3399CC;
+		margin-top: 10px;
+		color: white;
+		padding: 8px;
+	}
+	#submit2:hover{
+		transition: .5s ease-in;
+		-webkit-transition: .5s ease-in;
+		-moz-transition: .5s ease-in;
+		-o-transition: .5s ease-in;
+		-ms-transition: .5s ease-in;
+		-webkit-appearance: button;
+		cursor: pointer;
+		width: 100%;
+		border-radius: 8px;
+		background-color: orangered;
+		margin-top: 10px;
+		color: black;
+		padding: 8px;
+	}
+
+
+	/* 获取验证码 */
+	#sendCode{
+		display: inline;
+		background-color:#3399CC ;
+		color: white;
+		margin-left: 1.875rem;
+	}
+
+
+	#tologin{
+		color:darkorange;
+		font-size: 18px;
+	}
+
+	#tologin:hover{
+		color: black;
+	}
+	#submit2{
+		transition: .5s ease-in;
+		-webkit-transition: .5s ease-in;
+		-moz-transition: .5s ease-in;
+		-o-transition: .5s ease-in;
+		-ms-transition: .5s ease-in;
+		-webkit-appearance: button;
+		cursor: pointer;
+		width: 100%;
+		border-radius: 8px;
+		background-color: #3399CC;
+		margin-top: 10px;
+		color: white;
+		padding: 8px;
+	}
+		#submit2:hover{
+		transition: .5s ease-in;
+		-webkit-transition: .5s ease-in;
+		-moz-transition: .5s ease-in;
+		-o-transition: .5s ease-in;
+		-ms-transition: .5s ease-in;
+		-webkit-appearance: button;
+		cursor: pointer;
+		width: 100%;
+		border-radius: 8px;
+		background-color: orangered;
+		margin-top: 10px;
+		color: black;
+		padding: 8px;
+	}
+
+</style>
+
+
+<!-- js -->
+<script src="js/jquery-1.11.1.min.js"></script>
+<!-- //js -->
+<link href='http://fonts.googleapis.com/css?family=Raleway:400,100,100italic,200,200italic,300,400italic,500,500italic,600,600italic,700,700italic,800,800italic,900,900italic' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,400italic,600,600italic,700,700italic,800,800italic' rel='stylesheet' type='text/css'>
+<!-- start-smoth-scrolling -->
+<script type="text/javascript" src="js/move-top.js"></script>
+<script type="text/javascript" src="js/easing.js"></script>
+<script type="text/javascript">
+	jQuery(document).ready(function($) {
+		$(".scroll").click(function(event){		
+			event.preventDefault();
+			$('html,body').animate({scrollTop:$(this.hash).offset().top},1000);
+		});
+	});
+</script>
+
+
+<!--	<script>
+		var register_username = document.getElementById('username');
+        register_username.onblur = function () {
+			alert("aa");
+        }
+	</script>-->
+<!-- start-smoth-scrolling -->
+	<!--适配手机-->
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+</head>
+<body>
+	<div class="breadcrumbs">
+		<div class="container">
+			<ol class="breadcrumb breadcrumb1 animated wow slideInLeft" data-wow-delay=".5s">
+				<li>
+					<a href="index.html"><span class="glyphicon glyphicon-home" aria-hidden="true"></span>首页</a>
+				</li>
+				<li class="active">注册界面</li>
+			</ol>
+		</div>
+	</div>
+<!-- register -->
+	<div class="register">
+		<div class="container">
+			<h2>注册入口</h2>
+			<div class="login-form-grids">
+				<form>
+				<input type="email" id="email" placeholder="邮箱" required=" " >
+				<input type="text" id="username" placeholder="用户名" required=" " > <!--onblur="onblurUsername()-->
+				<input type="password" id="password3" placeholder="密码" required=" " >
+				<input type="password" id="password2" placeholder="确认密码" required=" " ><br>
+					<div id="getCode">
+						<input id="CAPTCHA" type="text" placeholder="验证码" required=" " >
+						<button id="sendCode" type="button" class="btn">发送验证码</button>
+							<div class="register-check-box">
+								<div class="check">
+									<label checkbox><input type="checkbox" name="checkbox"><i> </i>我同意服务协议</label>
+									<a href="" id="serviceContract">点击查看服务协议</a>
+								</div>
+							</div>
+					<input type="button" id="submit2" value="注册" />
+					</div>
+				</form>
+			<p style="width:100%;text-align:center;">
+				<a id="tologin" href="login.html">已有账号，去登陆</a>
+			</p>
+		</div>
+	</div>
+	</div>
+<!-- //register -->
+
+<!-- Bootstrap Core JavaScript -->
+<script src="js/bootstrap.min.js"></script>
+<!-- top-header and slider -->
+<!-- here stars scrolling icon -->
+	<script type="text/javascript">
+		$(document).ready(function() {
+			/*
+				var defaults = {
+				containerID: 'toTop', // fading element id
+				containerHoverID: 'toTopHover', // fading element hover id
+				scrollSpeed: 1200,
+				easingType: 'linear' 
+				};
+			*/
+								
+			$().UItoTop({ easingType: 'easeOutQuart' });
+								
+			});
+	</script>
+<!-- //here ends scrolling icon -->
+<script src="js/minicart.min.js"></script>
+<script>
+	// Mini Cart
+	paypal.minicart.render({
+		action: '#'
+	});
+
+	if (~window.location.search.indexOf('reset=true')) {
+		paypal.minicart.reset();
+	}
+</script>
+<!-- main slider-banner -->
+<script src="js/skdslider.min.js"></script>
+<link href="css/skdslider.css" rel="stylesheet">
+<script type="text/javascript">
+		jQuery(document).ready(function(){
+			jQuery('#demo1').skdslider({'delay':5000, 'animationSpeed': 2000,'showNextPrev':true,'showPlayButton':true,'autoSlide':true,'animationType':'fading'});
+						
+			jQuery('#responsive').change(function(){
+			  $('#responsive_wrapper').width(jQuery(this).val());
+			});
+			
+		});
+
+</script>	
+<!-- //main slider-banner -->
+		<script>
+			//用户名验证
+            $(document).ready(function () {
+                $("#username").change(function () {
+                    var username = $("#username").val();
+                    // alert(username);
+                    var data="username="+username;
+					$.ajax({
+						url:"../register/username",
+						type:"post",
+						data: data,
+                        // contentType: 'application/json;charset=utf-8',
+                        dataType:"json",
+						success:function (data) {
+							if("success"==data.status){
+                                // alert(data.message);
+							}else{
+                                alert(data.message);
+                                return;
+							}
+                        },
+						error:function () {
+							alert("系统繁忙");
+                        }
+
+					});
+                });
+                //发送验证码
+                $("#sendCode").click(function () {
+					var email=$("#email").val();
+					var data="email="+email;
+					$.ajax({
+					    url:"../register/email",
+						type:"post",
+						data:data,
+						dateType:"json",
+						success:function (data) {
+							if("success"==data.status){
+                                // alert(data.message);
+							}else{
+                                alert(data.message);
+							}
+                        }
+					});
+                });
+
+				//注册
+				$("#submit2").click(function () {
+				    var email=$("#email").val();
+					var username=$("#username").val();
+					var password=$("#password3").val();
+					var password2=$("#password2").val();
+					var checkCode=$("#CAPTCHA").val();
+					var data="email="+email+"&username="+username+"&password="+password+"&password2="+password2+"&checkCode="+checkCode;
+					$.ajax({
+						url:"../register/submit",
+						type:"post",
+						data:data,
+						dateType:"json",
+						success:function (data) {
+                            if("success"==data.status){
+                                window.location.href="login.html";
+                            }else{
+                                alert(data.message);
+                            }
+                        }
+					});
+                });
+            });
+
+
+
+
+
+		</script>
+
+</body>
+</html>

@@ -1,0 +1,52 @@
+			.heart {
+				position: relative;
+				width: 100px;
+				height: 90px;
+			}
+			
+			.heart:before,
+			.heart:after {
+				position: absolute;
+				content: "";
+				left: 10px;
+				top: 0;
+				width: 10px;
+				height: 16px;
+				background: gray;
+				border-radius: 10px 10px 0 0;
+				transform: rotate(-45deg);
+				transform-origin: 0 100%;
+			}
+			
+			.heart:after {
+				left: 0;
+				transform: rotate(45deg);
+				transform-origin: 100% 100%;
+			}
+			
+			.heartclick {
+				position: relative;
+				width: 100px;
+				height: 90px;
+			}
+			
+			.heartclick:before,
+			.heartclick:after {
+				position: absolute;
+				content: "";
+				left: 10px;
+				top: 0;
+				width: 10px;
+				height: 16px;
+				background: red;
+				border-radius: 10px 10px 0 0;
+				transform: rotate(-45deg);
+				transform-origin: 0 100%;
+			}
+			
+			.heartclick:after {
+				left: 0;
+				transform: rotate(45deg);
+				transform-origin: 100% 100%;
+			}
+			
