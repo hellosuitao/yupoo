@@ -2,13 +2,11 @@ package org.ruixun.yupoo.service;
 
 import org.ruixun.yupoo.bean.Album;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 
 import java.util.List;
 
 /*
-* 作者：随涛*/
+* 作者：suitao*/
 public interface AlbumService {/*相册接口*/
 
     List<Album> findAlbumsByUid(Long id);/*根据用户id查询相册*/

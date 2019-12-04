@@ -1,9 +1,5 @@
 package org.ruixun.yupoo.controller;
 
-import ch.qos.logback.core.joran.util.beans.BeanUtil;
-import org.apache.commons.lang3.SerializationUtils;
-import org.hibernate.Session;
-import org.hibernate.jpa.HibernateEntityManager;
 import org.ruixun.yupoo.bean.*;
 import org.ruixun.yupoo.dao.AlbumDao;
 import org.ruixun.yupoo.service.*;
@@ -11,31 +7,27 @@ import org.ruixun.yupoo.utils.Result;
 import org.ruixun.yupoo.utils.ResultUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.util.CollectionUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.servlet.http.Cookie;
-
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 /*
- * 作者：随涛*/
+ * 作者：suitao*/
 @Controller
 public class AlbumController {/*相册控制类*/
     private Logger logger = LoggerFactory.getLogger(AlbumController.class);
@@ -57,6 +49,8 @@ public class AlbumController {/*相册控制类*/
     private PicStatuService picStatuService;
     @Autowired
     private PicStatuService statuService;
+    @Autowired
+    private AudioService audioService;
 
     @RequestMapping("/findAlbumById")
     public String findAlbumById(Long id, HttpServletRequest request, Map<String, Object> map) throws UnknownHostException {
@@ -195,7 +189,6 @@ public class AlbumController {/*相册控制类*/
                          @RequestParam(value = "userId")Long userId,
                          ModelMap map) {
         albumService.deleteByAid(aid);
-
         Page<Album> albumPage = albumService.findAlbumsByCondition2(time, categoryId, inputValue, selectBy, page, size,userId);
         if (albumPage != null) {
             List<Long> likes = new ArrayList<>();
@@ -494,10 +487,17 @@ public class AlbumController {/*相册控制类*/
 //            }
 //        }
 //        System.out.println(beforePics);
+        List<Audio> audios = audioService.findAudioById(id);
+        String beforeAudios ="";
+        for (Audio audio : audios) {
+            beforeAudios=beforeAudios+audio.getPath()+",";
+        }
         map.put("beforePics", album.getPictures());
+        map.put("beforeAudios", beforeAudios);
         map.put("album", album);
         map.put("pictures", pictures);
         map.put("albumCategories", albumCategories);
+        map.put("audios",audios);
         return "editAlbum";
     }
 

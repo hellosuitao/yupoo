@@ -67,7 +67,7 @@ public class DelPictureServiceImpl implements DelPictureService {
     @Override
     public Page<DelPicture> findAll(Integer page,Integer size,Long userId) {
         Pageable pageable = new PageRequest(page, size, Sort.Direction.ASC, "updateTime");
-        Page<DelPicture> all = delPictureRepository.findAllByAid(pageable,userId);
+        Page<DelPicture> all = delPictureRepository.findAllByUserId(pageable,userId);
         return all;
     }
 
@@ -127,6 +127,7 @@ public class DelPictureServiceImpl implements DelPictureService {
     @Override
     public String insertPic(List<DelPicture> delpictures) {
         PictureUtils pictureUtils = new PictureUtils();
+        delpictures.forEach(delPicture -> delPicture.setUpdateTime(new Date()));
         List<Picture> lists = pictureUtils.DelToPic(delpictures);
         lists.forEach(System.out::println);
         lists.forEach(list->pictureDao.save(list));

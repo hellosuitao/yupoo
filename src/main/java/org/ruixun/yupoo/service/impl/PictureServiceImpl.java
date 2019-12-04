@@ -15,7 +15,7 @@ import java.util.Date;
 import java.util.List;
 
 /*
-* 作者：随涛*/
+* 作者：suitao*/
 @Service
 @Transactional
 public class PictureServiceImpl implements PictureService {/*图片service*/
@@ -46,14 +46,14 @@ public class PictureServiceImpl implements PictureService {/*图片service*/
     }
 
     @Override
-    public void deleteById(Long id,Long aid) {
+    public void deleteById(Long id,Long aid,Long userId) {
         /*回收站*/
         Picture picture = pictureDao.findPictureById(id);
         Album album = albumDao.findAlbumById(aid);
         String pictures = album.getPictures();
         pictures =  pictures.replaceAll(picture.getPath()+",","");
         albumDao.updatePictures(pictures,aid);
-        delPictureRepository.save(new DelPicture(null,aid,picture.getId(),picture.getName(),picture.getPath(),picture.getPsize(),picture.getUploadTime(),new Date()));
+        delPictureRepository.save(new DelPicture(aid,id,picture.getName(),picture.getPath(),picture.getPsize(),userId,picture.getUploadTime(),new Date()));
         pictureDao.deleteById(id);
     }
 

@@ -42,4 +42,7 @@ public interface DelPictureRepository extends JpaRepository<DelPicture,Long> {
     //根据Id查询路径
     @Query("select a.path from  DelPicture a where a.pid in (:pids)")
     List<String> findPathByPids(List<Long> pids);
+
+    Page<DelPicture> findAllByUserId(Pageable pageable,Long userId);
+
 }

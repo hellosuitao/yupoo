@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.Optional;
 /*
-* 作者：随涛*/
+* 作者：suitao*/
 public interface SurplusCapacityDao extends JpaRepository<SurplusCapacity,Long> {/*剩余容量类*/
 
     SurplusCapacity findSurplusCapacityById(Long id);/*根据用户id查剩余容量*/

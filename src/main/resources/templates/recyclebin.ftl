@@ -439,29 +439,5 @@
 			})
 		});
 
-		// 	var c = new Array($(".xuanze").is('checked').length);
-		// 	var d=0;
-		// 	$(".xuanze").each(function () {
-		// 		if ($(this).is(':checked')){
-		// 			c[d]=$(this).attr('id');
-		// 			d++;
-		// 		}
-		// 	})
-
-			// $.ajax({
-			// 	type:"post",
-			// 	url: "http://localhost:8080/test/test1",
-			// 	data: JSON.stringify({"ids":c}),
-			// 	contentType: "application/json;charset=UTF-8",
-			// 	dataType: "json",
-			// 	success:function (data) {
-            //        if (data=="OK"){
-            //        alert("Ok");
-            //        }else {
-            //        alert("false");
-			// 	}
-			// 	}
-			// })
-
 	</script>
 </html>

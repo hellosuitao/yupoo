@@ -157,13 +157,13 @@
 
     var audiopath = "";
     var haudiopath = "";
-
+    var tempType = "";
     /*上传视频*/
     function uploadAudio() {
         var formData = new FormData();
         var audios = document.getElementById("albumaudio");
         var fileObj = audios.files[0];
-        if(fileObj.type!="video/mp4"){
+        if (fileObj.type != "video/mp4") {
             alert("视频格式应该为mp4");
             return;
         }
@@ -181,15 +181,15 @@
             contentType: false,
             success: function (data) {
                 if (data.status == "success") {
-                    audiopath = data.data+",";
-                    if (!haudiopath) {
-                        haudiopath = audiopath;
-                    } else {
-                        haudiopath = haudiopath + audiopath;
-                    }
+                    audiopath = data.data;
                     alert("视频上传成功！！！");
-                    alert(haudioId);
-                    // reshow();
+                    if (!haudiopath) {
+                        haudiopath = audiopath + ",";
+                    } else {
+                        haudiopath = haudiopath + audiopath + ",";
+                    }
+                    tempType = fileObj.type;
+                    reshowAudio();
                 } else if (data.message != null) {
                     alert(data.message);
                 } else {
@@ -202,16 +202,23 @@
     /*视频回显*/
     function reshowAudio() {
         if (audiopath != "") {
-            $("#reShowAudio").append("");
+            //获取div
+            var div = document.getElementById("reShowAudio");
+            var div2 = document.createElement("video");
+            div2.setAttribute('width', '30%');
+            div2.setAttribute('controls', 'controls');
+            var video = document.createElement("source");
+            video.setAttribute('src', audiopath);
+            video.setAttribute('type', tempType);
+            div2.appendChild(video);
+            div.appendChild(div2);
         }
     }
 
     /*以下是商品添加*/
     /*添加分类*/
     function addCatagory() {
-
         var name = prompt("分类名称", "请输入分类名");
-
         if (name) {
             if (confirm("分类名称：" + name)) {
                 var albumCategory = JSON.stringify({"name": name});
@@ -238,6 +245,7 @@
     };
     var pictures = "";
     var hpictures = "";
+
     /*图片上传方法*/
     function uploadPic() {
         var formData = new FormData();
@@ -248,7 +256,7 @@
             if (fileObj == null) {
                 break;
             }
-            if((fileObj.type!="image/jpeg")&&(fileObj.type!="image/jpg")&&(fileObj.type!="image/png")){
+            if ((fileObj.type != "image/jpeg") && (fileObj.type != "image/jpg") && (fileObj.type != "image/png")) {
                 alert("图片应该为jpeg，jpg，png");
                 return;
             }
@@ -307,7 +315,7 @@
         var album = JSON.stringify({
             'name': name, 'albumCategories': [{'id': $("#categoryId").val()}],
             'price': price * 100, 'open': open, 'description': description,
-            'pictures': hpictures,'audios':haudiopath, 'uid':userId
+            'pictures': hpictures, 'audios': haudiopath, 'uid': userId
         })
         $.ajax({
             url: "/album/addAlbum",
@@ -321,7 +329,7 @@
                     window.location.href = "";
                 } else if (data.message == "请先登录") {
                     if (confirm("是否登录？")) {
-                        localStorage.setItem("username",null);
+                        localStorage.setItem("username", null);
                         window.parent.parent.location.reload();
                         // window.location.href = "/adminLogin.html";
                     } else {

@@ -12,7 +12,6 @@ import javax.servlet.MultipartConfigElement;
 
 @EnableCaching
 @SpringBootApplication
-//@Configuration
 @ComponentScan(basePackages = "org.ruixun.yupoo.*")
 public class YupooApplication {
 

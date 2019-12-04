@@ -1,6 +1,7 @@
 <div id="main">
     <input type="hidden" id="albumId" value="${album.id}"/>
     <input type="hidden" id="beforePictures" value="${beforePics}">
+    <input type="hidden" id="beforeAudios" value="${beforeAudios}">
     <div class="subfild-content base-info">
         <div class="kv-item ue-clear">
             <label><span class="impInfo">*</span>商品名称</label>
@@ -61,10 +62,29 @@
             </#list>
             <br>
             添加图片：<input id="pictures" type="file" onchange="addPic()" multiple="true">
+            <#--图片回显div-->
+            <div id="reShowPic">
+            </div>
         </div>
-        <#--图片回显div-->
-        <div id="reShowPic">
+        <div class="kv-item ue-clear">
+            <label><span class="impInfo">*</span>视频</label>
+            <#list audios as audio>
+                <video id="${audio.id}" src="${audio.path}" width="30%" controls="controls">
+                    <source src="${audio.path}" type="video/mp4">
+                    <source src="${audio.path}" type="video/ogg">
+                    <source src="${audio.path}" type="video/webm">
+                    <object data="${audio.path}" width="320" height="240">
+                        <embed src="${audio.path}" width="320" height="240">
+                    </object>
+                </video>
+                <button type="button" onclick="delAudio(${audio.id})" value="删除">删除</button>
+            </#list>
+            <br>
+            添加视频：<input id="albumaudio" type="file" onchange="uploadAudio()" multiple="true">
+            <div id="reShowAudio">
+            </div>
         </div>
+
     </div>
 
     <h2 class="subfild">
@@ -81,7 +101,6 @@
     </div>
 
     <div class="buttons">
-        <input class="button" type="button" value="效果预览"/>
         <input class="button" type="button" onclick="updateAlbum()" value="确认修改" id="addAlbum"/>
     </div>
 </div>

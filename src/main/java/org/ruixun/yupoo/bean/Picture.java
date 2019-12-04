@@ -5,7 +5,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 /*
-* 作者：随涛*/
+* 作者：suitao*/
 @Entity
 @Table(name = "picture")
 public class Picture implements Serializable {/*图片类*/

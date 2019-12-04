@@ -15,10 +15,10 @@ public class DelPicture {
     private  Long id;
 
     @NotNull
-    private  Long aid;
+    private  Long aid;//商品id
 
     @NotNull
-    private  Long pid;
+    private  Long pid;//图片id
 
     @NotEmpty
     private  String name;
@@ -28,6 +28,8 @@ public class DelPicture {
 
     @NotNull
     private  Long psize;
+
+    private Long userId;
 
 
     @Column(name = "upload_time")
@@ -69,20 +71,6 @@ public class DelPicture {
         this.pid = pid;
     }
 
-    @Override
-    public String toString() {
-        return "Picture{" +
-                "id=" + id +
-                ", aid=" + aid +
-                ", pid=" +pid+
-                ", name='" + name + '\'' +
-                ", path='" + path + '\'' +
-                ", psize=" + psize +
-                ",uploadTime=" +  uploadTime +
-                ",updateTime=" + updateTime +
-                '}';
-    }
-
     public Long getAid() {
         return aid;
     }
@@ -118,13 +106,36 @@ public class DelPicture {
     public DelPicture() {
     }
 
-    public DelPicture(Long id,Long aid,Long pid, String name, String path, Long psize, Date uploadTime, Date updateTime) {
-        this.id=id;
+    @Override
+    public String toString() {
+        return "DelPicture{" +
+                "id=" + id +
+                ", aid=" + aid +
+                ", pid=" + pid +
+                ", name='" + name + '\'' +
+                ", path='" + path + '\'' +
+                ", psize=" + psize +
+                ", userId=" + userId +
+                ", uploadTime=" + uploadTime +
+                ", updateTime=" + updateTime +
+                '}';
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public DelPicture(@NotNull Long aid, @NotNull Long pid, @NotEmpty String name, @NotEmpty String path, @NotNull Long psize, Long userId, Date uploadTime, Date updateTime) {
         this.aid = aid;
-        this.pid=pid;
+        this.pid = pid;
         this.name = name;
         this.path = path;
         this.psize = psize;
+        this.userId = userId;
         this.uploadTime = uploadTime;
         this.updateTime = updateTime;
     }

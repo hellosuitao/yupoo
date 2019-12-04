@@ -18,7 +18,6 @@
         #selectinfo {
             margin-left: 0.625rem;
             margin-right: 0.625rem;
-
         }
     </style>
 </head>
@@ -348,9 +347,11 @@
         var description = $('textarea[name="content"]').val();
         var albumId = $("#albumId").val();
         pictures = $("#beforePictures").val();
+        alert(haudiopath);
         var album = JSON.stringify({
             'id': albumId, 'albumCategories': [{'id': $("#categoryId").val()}],
-            'name': name, 'price': price * 100, 'open': open, 'description': description, 'pictures': pictures
+            'name': name, 'price': price * 100, 'open': open, 'description': description,
+            'pictures': pictures,'audios':haudiopath
         })
         $.ajax({
             url: "/album/updateAlbum",
@@ -395,6 +396,75 @@
         });
     }
 
+    var audiopath = "";
+    var haudiopath ="";
+    var tempType="";
+    /*上传视频*/
+    function uploadAudio() {
+        var formData = new FormData();
+        var audios = document.getElementById("albumaudio");
+        var fileObj = audios.files[0];
+        if(fileObj.type!="video/mp4"){
+            alert("视频格式应该为mp4");
+            return;
+        }
+        if (fileObj.size > 1024 * 1024 * 100) {//100MB
+            alert(fileObj.name + "超过100MB,请重新上传");
+            return;
+        }
+        formData.append("file", fileObj);/*添加至表单*/
+        $.ajax({
+            url: "/audio/uploadaudio",
+            type: "POST",
+            data: formData,
+            async: false,
+            processData: false,
+            contentType: false,
+            success: function (data) {
+                if (data.status == "success") {
+                    audiopath = data.data;
+                    alert("视频上传成功！！！");
+                    if (!haudiopath) {
+                        haudiopath = audiopath+",";
+                    } else {
+                        haudiopath = haudiopath + audiopath+",";
+                    }
+                    tempType=fileObj.type;
+                    reshowAudio();
+                } else if (data.message != null) {
+                    alert(data.message);
+                } else {
+                    alert("商品上传失败！！！")
+                }
+            },
+        });
+    }
+
+    /*视频回显*/
+    function reshowAudio() {
+        if (audiopath != "") {
+            //获取div
+            var div = document.getElementById("reShowAudio");
+            var div2 = document.createElement("video");
+            div2.setAttribute('width', '30%');
+            div2.setAttribute('controls', 'controls');
+            var video = document.createElement("source");
+            video.setAttribute('src', audiopath);
+            video.setAttribute('type', tempType);
+            div2.appendChild(video);
+            div.appendChild(div2);
+        }
+    }
+
+    /*删除视频*/
+    function delAudio(audioId){
+        var aid = $("#albumId").val();
+        $("#" + audioId).next().remove();
+        $("#" + audioId).remove();
+        $.post("/audio/delete", {id: audioId,aid:aid}, function () {
+        });
+    }
+
     var pictures = "";
 
     /*编辑里面的添加图片方法*/
@@ -431,7 +501,7 @@
                 } else if (data.message != null) {
                     alert(data.message);
                 } else {
-                    alert("图片添加失败！！！")
+                    alert("图片添加失败！！！");
                 }
             },
         });
@@ -595,6 +665,7 @@
 
     /*删除商品*/
     function btnDelete(id) {
+        var uid =localStorage.getItem("userId");
         var time = $(":input[name='time']:checked").val();
         var categoryId = $("#categoryId").val().toString();
         var selectBy = $("#selectBy").val();
@@ -612,7 +683,8 @@
                     "selectBy": selectBy,
                     "inputValue": inputValue,
                     "page": page,
-                    "size": size
+                    "size": size,
+                    "userId":uid
                 },
                 success: function (data) {
                     alert("商品删除成功!")

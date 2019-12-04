@@ -1,18 +1,25 @@
 package org.ruixun.yupoo.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import org.ruixun.yupoo.bean.DelAudio;
 import org.ruixun.yupoo.bean.DelPicture;
+import org.ruixun.yupoo.bean.Users;
+import org.ruixun.yupoo.service.DelAudioService;
 import org.ruixun.yupoo.service.DelPictureService;
 import org.ruixun.yupoo.service.PicStatuService;
+import org.ruixun.yupoo.utils.FindUser;
 import org.ruixun.yupoo.utils.Result;
 import org.ruixun.yupoo.utils.ResultUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.*;
 
@@ -25,6 +32,8 @@ public class DelPictureContonller {
     private DelPictureService delPictureService;
     @Autowired
     private PicStatuService picStatuService;
+    @Autowired
+    private DelAudioService delAudioService;
 
     //查询所有回收站图片进行分页
     @RequestMapping("/findAll")
@@ -39,18 +48,22 @@ public class DelPictureContonller {
         if (page == -1) {
             page=0;
         }
+
 //        Page<DelPicture> all = delPictureService.findAll(page, size);
         /*suitao*/
         Page<DelPicture> all = delPictureService.findAll(page, size, userId);
-        all.forEach(System.out::println);
+        Page<DelAudio> delAudios = delAudioService.findAll(page,size,userId);
         map.put("dels",all);
+        map.put("delAudios",delAudios);
+        delAudios.forEach(System.out::println);
         return  "recyclebin";
     }
 
     //查询回收站所有图片进行判断，是否删除
     @ResponseBody
     @RequestMapping("/findDel")
-    public Result findDel(){
+    public Result findDel(HttpServletRequest request){
+        Users user = FindUser.findUser(request);
         String s = delPictureService.checkDel();
         if (s!="success"){
             return ResultUtils.buildFail("删除失败");

@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.util.Date;
 
 /**
- * 作者：随涛
+ * 作者：suitao
  * 音频类
 * */
 @Entity
@@ -21,6 +21,25 @@ public class Audio {
     private Date uploadTime;/*上传时间*/
     @Column(name = "update_time")
     private  Date updateTime;/*修改时间*/
+    private Long userId;
+
+    public Audio(Long aid, String name, String path, Long asize, Date uploadTime, Date updateTime, Long userId) {
+        this.aid = aid;
+        this.name = name;
+        this.path = path;
+        this.asize = asize;
+        this.uploadTime = uploadTime;
+        this.updateTime = updateTime;
+        this.userId = userId;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
 
     @Override
     public String toString() {

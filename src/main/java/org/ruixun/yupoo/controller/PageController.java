@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /*
-* 作者：随涛*/
+* 作者：suitao*/
 @Controller
 @RequestMapping("/page")
 public class PageController {/*页面跳转类*/

@@ -16,7 +16,7 @@ import java.io.File;
 import java.util.*;
 
 /*
- * 作者：随涛*/
+ * 作者：suitao*/
 @Service
 @Transactional
 public class AlbumServiceImpl implements AlbumService {/*相册service*/
@@ -93,15 +93,6 @@ public class AlbumServiceImpl implements AlbumService {/*相册service*/
 
     @Override
     public void updateAlbum(Album album) {
-//        String[] strings = album.getPictures().split(",");
-//        System.out.println(album.getPictures());
-//        String pictures = "";
-//        for (int i = 0; i < strings.length; i++) {
-//            if(!strings[i].equals("")&&strings[i]!=null){
-//                pictures = pictures + "/image/" + strings[i].split("/image/")[1] + ",";
-//            }
-//        }
-
         Album oldAlbum = albumDao.findAlbumById(album.getId());
         album.setPictures(album.getPictures());
         album.setUid(1l);
@@ -112,27 +103,16 @@ public class AlbumServiceImpl implements AlbumService {/*相册service*/
         for (int i = 0; i < split.length; i++) {
             if (split[i] != null || split[i] != "") {
                 album.setCoverpath(split[0]);
-                albumDao.save(album);
                 pictureDao.setAid(album.getId(), split[i]);
             }
         }
-
-        List<Picture> fakePictures = pictureDao.findPicturesByAid(0l);
-        if (fakePictures.size()>0) {
-            fakePictures.forEach(picture -> {
-                String path = picture.getPath();
-                /*target 路径*/
-//                String filePath ="\\user\\jar\\image\\"+path.split("8080/")[1];
-                String filePath = staticProperties.getPicturepath() + path.split(staticProperties.getStaticport())[1];
-                File file = new File(filePath);
-                file.delete();
-                /*项目路径*/
-//                String newPathName = new File("").getAbsolutePath()+"/src/main/resources/static"+path;
-//                File file1 = new File(newPathName);
-//                file1.delete();
-//                pictureDao.deleteByAid(0l);
-            });
+        String[] split1 = album.getAudios().split(",");
+        for (int i = 0; i < split1.length; i++) {
+            if (split1[i] != null || split1[i] != "") {
+                audioDao.setAid(album.getId(), split1[i]);
+            }
         }
+        albumDao.save(album);
 
     }
 
@@ -320,6 +300,15 @@ public class AlbumServiceImpl implements AlbumService {/*相册service*/
         });
         /*批量删除图片*/
         pictureService.deleteByAids(ids);
+        /*删除视频*/
+        List<Audio> audios = audioDao.findAllByAid(aid);
+        audios.forEach(audio -> {
+            String newPath = staticProperties.getPicturepath()+audio.getPath().split(staticProperties.getStaticport())[1];
+            File file = new File(newPath);
+            file.delete();
+        });
+        audioDao.deleteAllByAid(aid);
+
         /*批量删除商品*/
         albumDao.deleteById(aid);
     }

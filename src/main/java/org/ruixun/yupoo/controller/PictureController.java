@@ -2,8 +2,10 @@ package org.ruixun.yupoo.controller;
 
 import org.ruixun.yupoo.bean.Album;
 import org.ruixun.yupoo.bean.Picture;
+import org.ruixun.yupoo.bean.Users;
 import org.ruixun.yupoo.service.AlbumService;
 import org.ruixun.yupoo.service.PictureService;
+import org.ruixun.yupoo.utils.FindUser;
 import org.ruixun.yupoo.utils.Result;
 import org.ruixun.yupoo.utils.ResultUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,10 +16,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /*
-* 作者：随涛*/
+* 作者：suitao*/
 @Controller
 public class PictureController {/*图片控制类*/
     @Autowired
@@ -36,8 +39,9 @@ public class PictureController {/*图片控制类*/
 
     @RequestMapping("/picture/delete")/*删除图片*/
     @ResponseBody
-    public Result delete(@RequestParam("id") Long id, @RequestParam("aid") Long aid, ModelMap map){
-        pictureService.deleteById(id,aid);
+    public Result delete(@RequestParam("id") Long id, @RequestParam("aid") Long aid, HttpServletRequest request){
+        Users user = FindUser.findUser(request);
+        pictureService.deleteById(id,aid,user.getId());
         return ResultUtils.buildSuccess();
     }
 

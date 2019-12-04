@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 /*
-作者：随涛
+作者：suitao
 */
 public interface PictureDao extends JpaRepository<Picture,Long> {/*图片dao*/
 
@@ -35,5 +35,4 @@ public interface PictureDao extends JpaRepository<Picture,Long> {/*图片dao*/
 
     @Modifying
     void deleteByAid(Long aid);
-
 }

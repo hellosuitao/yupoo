@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.net.InetAddress;
 
 /*
- * 作者：随涛.....*/
+ * 作者：suitao.....*/
 @Controller
 public class PictureUpload {/*上传图片*/
     @Autowired

@@ -23,7 +23,7 @@ import java.util.Date;
 import java.util.UUID;
 
 /*
- * 作者：随涛*/
+ * 作者：suitao*/
 @Service
 @Transactional
 public class SurplusCapacityServiceImpl implements SurplusCapacityService {/*剩余容量service*/
@@ -73,6 +73,7 @@ public class SurplusCapacityServiceImpl implements SurplusCapacityService {/*剩
 //                    if (file == null){
 //                        return null;
 //                    }
+
             try {
                 //获取源图片
                 Image srcImage = ImageIO.read(file[i].getInputStream());

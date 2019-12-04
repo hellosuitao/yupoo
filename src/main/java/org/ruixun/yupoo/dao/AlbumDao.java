@@ -3,9 +3,7 @@ package org.ruixun.yupoo.dao;
 import org.ruixun.yupoo.bean.Album;
 import org.ruixun.yupoo.bean.AlbumCategory;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
@@ -15,9 +13,9 @@ import java.util.Date;
 import java.util.List;
 
 /*
-作者：随涛
+作者：suitao
 * 相册dao*/
-public interface AlbumDao extends JpaRepository<Album,Long>, JpaSpecificationExecutor<Album> {
+public interface AlbumDao extends JpaRepository<Album,Long>{
 
 //    @Query("select album from Album  where album.uid=:uid")//命名参数：推荐
     /*默认方法*/

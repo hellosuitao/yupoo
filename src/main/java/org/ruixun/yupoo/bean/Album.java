@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.List;
 /*
-作者：随涛
+作者：suitao
 * */
 @Entity
 @Table(name = "album")

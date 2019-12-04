@@ -11,9 +11,18 @@ import java.util.List;
  * @description 音频service
  */
 public interface AudioService {
-    String addAudio(MultipartFile file);//根据商品id添加视频
+    String addAudio(MultipartFile file,Long userId);//根据商品id添加视频
 
-    List<Audio> findAudioById(Long valueOf);//根据相册id查音频
+    List<Audio> findAudioById(Long valueOf);//根据商品id查音频
 
-    void deleteAudioById(Long id);
+
+    void deleteAudioById(Long id,Long aid,Long userId);//假删除，存入回收站
+
+    String checkDel(Long userId);//检查过期音频
+
+    void delleteAudioByPath(String path);//删除数据库（文件）真实音频
+
+    String deleteAll(Long id);
+
+    String delByIds(List<Long> list);
 }

@@ -85,7 +85,6 @@
             $("#toplogin").html("<a href='javascript:;' onclick='logout()'>SignOut</a>");
             $("#useraa").text("Welcome!${user.username}")
             </#if>
-
         }
     </script>
     <!-- start-smoth-scrolling -->
