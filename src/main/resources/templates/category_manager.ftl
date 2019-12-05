@@ -72,11 +72,10 @@
                         <#--导航栏-->
                         <thead>
                         <tr role="row">
-                            <th>
-                                <input type="checkbox" id="selectall" onclick="selectAll(this)" value=""/>&nbsp;&nbsp;Check
-                                All
-                            </th>
-                            <th>显示二级分类</th>
+<#--                            <th>-->
+<#--                                <input type="checkbox" id="selectall" onclick="selectAll(this)" value=""/>&nbsp;&nbsp;Check-->
+<#--                                All-->
+<#--                            </th>-->
                             <th>CategoryId</th>
                             <th>CategoryName</th>
                             <th>Operation</th>
@@ -88,11 +87,10 @@
                         <#list albumCategories as aparent>
                         <#--判断是否是一级分类-->
                             <#if aparent.parentId==0>
-                                <tr id="${aparent.id}">
-                                    <td>
-                                        <input type="checkbox" name="checkid" id="" value="${aparent.id}"/>
-                                    </td>
-                                    <th onclick="showChild(${aparent.id})">^</th>
+                                <tr id="${aparent.id}" onclick="showChild(${aparent.id})">
+<#--                                    <td>-->
+<#--                                        <input type="checkbox" name="checkid" id="" value="${aparent.id}"/>-->
+<#--                                    </td>-->
                                     <td>${aparent.id}</td>
                                     <td class="name${aparent.id}">${aparent.name}</td>
                                     <td>
@@ -115,26 +113,23 @@
                             <#list albumCategories as child>
                             <#--判断是否是子类-->
                                 <#if child.parentId=aparent.id>
-                                    <div class="child${aparent.id}" onclick="showChild()">
-                                        <tr id="${child.id}" style="background-color: #00e58b">
-                                            <td>
-                                                <input type="checkbox" name="checkid" id="" value="${child.id}"/>
-                                            </td>
-                                            <th onclick="findByParentId(${child.id})">^</th>
-                                            <td>${child.id}</td>
-                                            <td class="name${child.id}">${child.name}</td>
-                                            <td>
-                                                <button type="button" class="btn-default"
-                                                        onclick="editCategory(${child.id})"
-                                                        value="${child.id}">Edit
-                                                </button>
-                                                <button type="button" class="btn-danger" value="${child.id}"
-                                                        onclick="btnDelete(${child.id})">Delete
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    </div>
-
+                                    <tr class="child${aparent.id}" id="${child.id}"
+                                        style="background-color: #00e58b;display: none;">
+<#--                                        <td>-->
+<#--                                            <input type="checkbox" name="checkid" id="" value="${child.id}"/>-->
+<#--                                        </td>-->
+                                        <td>${child.id}</td>
+                                        <td class="name${child.id}">${child.name}</td>
+                                        <td>
+                                            <button type="button" class="btn-default"
+                                                    onclick="editCategory(${child.id})"
+                                                    value="${child.id}">Edit
+                                            </button>
+                                            <button type="button" class="btn-danger" value="${child.id}"
+                                                    onclick="btnDelete(${child.id})">Delete
+                                            </button>
+                                        </td>
+                                    </tr>
                                 </#if>
                             </#list>
                         </#list>
@@ -150,12 +145,12 @@
 <script type="text/javascript">
     /*显示隐藏二级分类*/
     function showChild(parentId) {
-        alert(parentId);
         if ($(".child" + parentId).css("display") == "none") {
-            $(".child" + parentId).css("display")
+            $(".child" + parentId).show();
+        } else {
+            $(".child" + parentId).hide();
         }
     }
-
     /*添加分类*/
     function addCatagory(id) {
         var name = prompt("CategoryName", "Please input name");
@@ -171,7 +166,7 @@
                     success: function (data) {
                         if (data.status == "success") {
                             alert("Append successfully");
-                            // $("#categoryId").append('<option value=' + data.data + '>' + name + '</option>');
+                            window.location.reload();
                         } else {
                             alert("Fail append");
                         }
@@ -183,7 +178,6 @@
 
     /*编辑分类*/
     function editCategory(id) {
-        alert(id);
         var name = prompt("分类名称", "请输入新的分类名");
         if (name) {
             if (confirm("分类名称：" + name)) {
@@ -206,53 +200,6 @@
         }
     }
 
-    /*全选*/
-    function selectAll(hello) {
-        if (hello.checked) {
-            $("input[name='checkid']").attr('checked', true);
-        } else {
-            $("input[name='checkid']").attr('checked', false);
-        }
-    }
-
-    /*批量删除*/
-    function deleteMany() {
-        var albumIds = new Array();
-        $(":input[name='checkid']:checked").each(function () {
-            albumIds.push($(this).val());
-        });
-        var time = $(":input[name='time']:checked").val();
-        var categoryId = $("#categoryId").val();
-        var selectBy = $("#selectBy").val();
-        var inputValue = $("#selectinfo").val();
-        var page = 0;
-        var size = 6;
-        if (window.confirm("Confirm Operation？")) {
-            if (albumIds.length >= 1) {
-                $.ajax({
-                    type: "POST",
-                    url: "/album/deleteMany",
-                    data: {
-                        "time": time,
-                        "categoryId": categoryId,
-                        "selectBy": selectBy,
-                        "inputValue": inputValue,
-                        "page": page,
-                        "size": size,
-                        "albumIds": albumIds
-                    },
-                    traditional: true,
-                    success: function (data) {
-                        $("#categoryftl").html(data);
-                    }
-                });
-            } else {
-                alert("至少选择一项！！！");
-            }
-
-        }
-
-    }
 
     /*删除分类*/
     function btnDelete(id) {
@@ -260,6 +207,7 @@
             $.post("/albumCategory/deleteById", {"categoryId": id}, function f(data) {
                 if (data.status = "success") {
                     alert("Delete successfully");
+                    window.location.reload();
                 } else {
                     alert("Fail delete");
                 }
