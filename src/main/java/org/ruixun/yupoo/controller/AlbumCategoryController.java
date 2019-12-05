@@ -56,18 +56,20 @@ public class AlbumCategoryController {
     public String findAll(HttpServletRequest request, ModelMap map) {
         Users user = FindUser.findUser(request);
         List<AlbumCategory> albumCategories = albumCategoryService.findAll(user.getId());
-        String objectToJson = JsonUtils.objectToJson(albumCategories);
+        albumCategories.forEach(System.out::println);
         map.put("albumCategories",albumCategories);
         return "category_manager";
     }
 
     @RequestMapping("/deleteById")
+    @ResponseBody
     public Result deleteById(@RequestParam("categoryId")Long categoryId){
         albumCategoryService.delectTable(categoryId);
         return ResultUtils.buildSuccess();
     }
 
     @RequestMapping("/deleteByIds")
+    @ResponseBody
     public Result deleteByIds(@RequestParam("categoryIds")Long categoryIds){
         albumCategoryService.delectTable(categoryIds);
         return ResultUtils.buildSuccess();
@@ -109,11 +111,8 @@ public class AlbumCategoryController {
     //修改类名
     @RequestMapping("/updateName")
     @ResponseBody
-    public Result updateName(@RequestParam("name") String name,@RequestParam("id") Long id){
-        albumCategoryService.updataName(name, id);
+    public Result updateName(@RequestBody AlbumCategory albumCategory){
+        albumCategoryService.updataName(albumCategory.getName(), albumCategory.getId());
         return ResultUtils.buildSuccess();
     }
-
-
-
 }

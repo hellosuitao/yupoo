@@ -29,12 +29,15 @@ public class AlbumCategoryServiceImpl implements AlbumCategoryService {
     //添加分类
     @Override
     public Long saveAlbumCategory(AlbumCategory albumCategory) {
-        if (!(albumCategory.getParentId() == 0L)) {
-            AlbumCategory albumCategoryById = albumCategoryDao.findAlbumCategoryById(albumCategory.getParentId());
-            if (!albumCategoryById.getIsParent()) {
-                albumCategoryDao.updateIsParentById(albumCategoryById.getId());
-            }
+        if(albumCategory.getParentId()==0l){
+            albumCategory.setParent(true);
         }
+//        if (!(albumCategory.getParentId() == 0L)) {
+//            AlbumCategory albumCategoryById = albumCategoryDao.findAlbumCategoryById(albumCategory.getParentId());
+//            if (!albumCategoryById.getIsParent()) {
+//                albumCategoryDao.updateIsParentById(albumCategoryById.getId());
+//            }
+//        }
         albumCategoryDao.save(albumCategory);
         return albumCategory.getId();
     }

@@ -218,33 +218,6 @@
     }
 
     /*以下是商品添加*/
-    /*添加分类*/
-    function addCatagory() {
-        var name = prompt("分类名称", "请输入分类名");
-        if (name) {
-            if (confirm("分类名称：" + name)) {
-                var albumCategory = JSON.stringify({"name": name});
-                $.ajax({
-                    url: "/albumCategory/addAlbumCategory",
-                    type: "POST",
-                    data: albumCategory,
-                    contentType: 'application/json;charset=utf-8',
-                    type: "json",
-                    success: function (data) {
-                        if (data.status == "success") {
-                            alert("成功添加" + name);
-                            $("#categoryId").append('<option value=' + data.data + '>' + name + '</option>');
-                        } else {
-                            alert("分类添加失败！！！");
-                        }
-                    }
-                });
-            }
-
-        } else {
-            alert("分类信息不完整，请重新创建");
-        }
-    };
     var pictures = "";
     var hpictures = "";
 
