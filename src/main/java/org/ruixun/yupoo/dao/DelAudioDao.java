@@ -21,8 +21,8 @@ public interface DelAudioDao extends JpaRepository<DelAudio,Long> {
     @Modifying
     void deleteAllByUserId(Long userId);
 
-    List<DelAudio> findAllByIdIn(List<Long> ids);
+    List<DelAudio> findAllByAudioIdIn(List<Long> ids);
 
     @Modifying
-    void deleteAllByIdIn(List<Long> ids);
+    void deleteAllByAudioIdIn(List<Long> ids);
 }

@@ -54,17 +54,18 @@ public class DelAudioServiceImpl implements DelAudioService {
 
     @Override
     public List<DelAudio> findAllByIds(List<Long> list) {
-        return delAudioDao.findAllByIdIn(list);
+        return delAudioDao.findAllByAudioIdIn(list);
     }
 
     @Override
     public String recover(List<Long> list) {
-        List<DelAudio> delAudios = delAudioDao.findAllByIdIn(list);
+        List<DelAudio> delAudios = delAudioDao.findAllByAudioIdIn(list);
+        delAudios.forEach(System.out::println);
         if(delAudios!=null&&delAudios.size()>0){
             delAudios.forEach(audio -> {
                 audioDao.save(new Audio(audio.getAid(),audio.getName(),audio.getPath(),audio.getAsize(),new Date(),null,audio.getUserId()));
             });
-            delAudioDao.deleteAllByIdIn(list);
+            delAudioDao.deleteAllByAudioIdIn(list);
         }
         return "success";
     }

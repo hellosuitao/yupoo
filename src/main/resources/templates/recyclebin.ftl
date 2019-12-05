@@ -240,7 +240,7 @@
 						<div class="hide">
 							选择
 							<input type="checkbox" class="xuanze" id="${a.pid}"/>
-							
+
 						</div>
 <#--						<img src="${a.path}" alt=""><br />-->
 						<input type="image" src="${a.path}" style="width:  140px;
@@ -320,6 +320,8 @@
 						</li>
 					</ul>
 				</nav>
+
+
 			</div>
 		</div>
 

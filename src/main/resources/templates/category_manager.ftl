@@ -86,13 +86,13 @@
                         <tbody>
                         <#--显示一级分类-->
                         <#list albumCategories as aparent>
-                            <#--判断是否是一级分类-->
+                        <#--判断是否是一级分类-->
                             <#if aparent.parentId==0>
-                                <tr  id="${aparent.id}">
+                                <tr id="${aparent.id}">
                                     <td>
                                         <input type="checkbox" name="checkid" id="" value="${aparent.id}"/>
                                     </td>
-                                    <th>^</th>
+                                    <th onclick="showChild(${aparent.id})">^</th>
                                     <td>${aparent.id}</td>
                                     <td class="name${aparent.id}">${aparent.name}</td>
                                     <td>
@@ -113,25 +113,28 @@
                             </#if>
                         <#--显示二级分类-->
                             <#list albumCategories as child>
-                                <#--判断是否是子类-->
+                            <#--判断是否是子类-->
                                 <#if child.parentId=aparent.id>
-                                    <tr id="${child.id}" style="background-color: #00e58b">
-                                        <td>
-                                            <input type="checkbox" name="checkid" id="" value="${child.id}"/>
-                                        </td>
-                                        <th onclick="findByParentId(${child.id})">^</th>
-                                        <td>${child.id}</td>
-                                        <td class="name${child.id}">${child.name}</td>
-                                        <td>
-                                            <button type="button" class="btn-default"
-                                                    onclick="editCategory(${child.id})"
-                                                    value="${child.id}">Edit
-                                            </button>
-                                            <button type="button" class="btn-danger" value="${child.id}"
-                                                    onclick="btnDelete(${child.id})">Delete
-                                            </button>
-                                        </td>
-                                    </tr>
+                                    <div class="child${aparent.id}" onclick="showChild()">
+                                        <tr id="${child.id}" style="background-color: #00e58b">
+                                            <td>
+                                                <input type="checkbox" name="checkid" id="" value="${child.id}"/>
+                                            </td>
+                                            <th onclick="findByParentId(${child.id})">^</th>
+                                            <td>${child.id}</td>
+                                            <td class="name${child.id}">${child.name}</td>
+                                            <td>
+                                                <button type="button" class="btn-default"
+                                                        onclick="editCategory(${child.id})"
+                                                        value="${child.id}">Edit
+                                                </button>
+                                                <button type="button" class="btn-danger" value="${child.id}"
+                                                        onclick="btnDelete(${child.id})">Delete
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </div>
+
                                 </#if>
                             </#list>
                         </#list>
@@ -145,12 +148,20 @@
 </body>
 <script type="text/javascript" src="/js/jquery.js"></script>
 <script type="text/javascript">
+    /*显示隐藏二级分类*/
+    function showChild(parentId) {
+        alert(parentId);
+        if ($(".child" + parentId).css("display") == "none") {
+            $(".child" + parentId).css("display")
+        }
+    }
+
     /*添加分类*/
     function addCatagory(id) {
         var name = prompt("CategoryName", "Please input name");
         if (name) {
             if (confirm("CategoryName：" + name)) {
-                var albumCategory = JSON.stringify({"name": name,"parentId":id});
+                var albumCategory = JSON.stringify({"name": name, "parentId": id});
                 $.ajax({
                     url: "/albumCategory/addAlbumCategory",
                     type: "POST",
@@ -176,7 +187,7 @@
         var name = prompt("分类名称", "请输入新的分类名");
         if (name) {
             if (confirm("分类名称：" + name)) {
-                var albumCategory = JSON.stringify({"name": name,"id":id});
+                var albumCategory = JSON.stringify({"name": name, "id": id});
                 $.ajax({
                     url: "/albumCategory/updateName",
                     type: "POST",
@@ -185,7 +196,7 @@
                     type: "json",
                     success: function (data) {
                         if (data.status == "success") {
-                            $(".name"+id).html(name);
+                            $(".name" + id).html(name);
                         }
                     }
                 });
@@ -246,10 +257,10 @@
     /*删除分类*/
     function btnDelete(id) {
         if (confirm("Confirm operation???")) {
-            $.post("/albumCategory/deleteById", {"categoryId":id},function f(data) {
-                if(data.status="success"){
+            $.post("/albumCategory/deleteById", {"categoryId": id}, function f(data) {
+                if (data.status = "success") {
                     alert("Delete successfully");
-                }else {
+                } else {
                     alert("Fail delete");
                 }
             })

@@ -49,9 +49,7 @@ public class DelPictureContonller {
         }
         /*suitao*/
         Page<DelPicture> all = delPictureService.findAll(page, size, user.getId());
-        Page<DelAudio> delAudios = delAudioService.findAll(page,size,user.getId());
         map.put("dels",all);
-        map.put("delAudios",delAudios);
         return  "recyclebin";
     }
 

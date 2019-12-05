@@ -84,11 +84,7 @@ public class AudioServiceImpl implements AudioService {
     @Override
     public String deleteAll(Long userId) {
         List<DelAudio> audios = delAudioDao.findAllByUserId(userId);
-        if (audios.isEmpty()){
-            return "success";
-        }
-        List<Long> list = new ArrayList<>();
-        if(list!=null&&list.size()>0){
+        if (audios!=null&&audios.size()>0){
             audios.forEach(audio->{
                 audioService.delleteAudioByPath(audio.getPath());
             });
@@ -100,31 +96,31 @@ public class AudioServiceImpl implements AudioService {
     @Override
     public String delByIds(List<Long> ids) {
         List<Long> longs=new ArrayList<>();
-        List<DelAudio> delAudios = delAudioDao.findAllByIdIn(ids);
+        List<DelAudio> delAudios = delAudioDao.findAllByAudioIdIn(ids);
         if(delAudios!=null&&delAudios.size()>0){
             delAudios.forEach(audio -> {
-                String path = staticProperties.getPicturepath()+audio.getPath().split(staticProperties.getStaticport());
+               audioService.delleteAudioByPath(audio.getPath());
             });
-            delAudioDao.deleteAllByIdIn(ids);
+            delAudioDao.deleteAllByAudioIdIn(ids);
         }
         return "success";
     }
 
-    @Override
-    public String checkDel(Long userId) {
-        List<DelAudio> delAudios = delAudioDao.findAllByUserId(userId);
-        Long time1 = new Date().getTime();
-        List<Long> list = new ArrayList<>();
-        if(list!=null&&list.size()>0){
-            for (DelAudio del:delAudios) {
-                Long time = del.getUploadTime().getTime();
-                if (time1-time>86400000*7){
-                    list.add(del.getId());
-                    delAudioDao.deleteById(del.getId());
-                    audioService.delleteAudioByPath(del.getPath());
-                }
-            }
-        }
-        return "success";
-    }
+//    @Override
+//    public String checkDel(Long userId) {
+//        List<DelAudio> delAudios = delAudioDao.findAllByUserId(userId);
+//        Long time1 = new Date().getTime();
+//        List<Long> list = new ArrayList<>();
+//        if(list!=null&&list.size()>0){
+//            for (DelAudio del:delAudios) {
+//                Long time = del.getUploadTime().getTime();
+//                if (time1-time>86400000*7){
+//                    list.add(del.getId());
+//                    delAudioDao.deleteById(del.getId());
+//                    audioService.delleteAudioByPath(del.getPath());
+//                }
+//            }
+//        }
+//        return "success";
+//    }
 }

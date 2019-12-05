@@ -44,9 +44,9 @@ public class Album{/*商品类*/
     /*图片排序方式 默认为时间*/
     private String sortpicture = "createdate";/*当做时间查询*/
     @NotNull
-    @Min(0l)/*分*/
+    @Min(0)/*分*/
     @Max(999999999)/**/
-    private double price =0l;//商品价格
+    private double price =0;//商品价格
     @NotEmpty
     private String pictures;//商品图片
 

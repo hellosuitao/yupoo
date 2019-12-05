@@ -18,7 +18,7 @@ public interface AudioService {
 
     void deleteAudioById(Long id,Long aid,Long userId);//假删除，存入回收站
 
-    String checkDel(Long userId);//检查过期音频
+//    String checkDel(Long userId);//检查过期音频
 
     void delleteAudioByPath(String path);//删除数据库（文件）真实音频
 

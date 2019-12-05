@@ -55,10 +55,10 @@ public class AudioUpload {
     @RequestMapping("/audio/findDel")
     public Result findDel(HttpServletRequest request){
         Users user = FindUser.findUser(request);
-        String s = audioService.checkDel(user.getId());
-        if (s!="success"){
-            return ResultUtils.buildFail("fail delete");
-        }
+//        String s = audioService.checkDel(user.getId());
+//        if (s!="success"){
+//            return ResultUtils.buildFail("fail delete");
+//        }
         return ResultUtils.buildSuccess();
     }
 

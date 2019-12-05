@@ -158,7 +158,6 @@
                                     </button>
                                     <button type="button" data-toggle="modal" data-target="#myModal${album_index}">修改点赞数</button>
 
-
                                     <div class="modal fade" id="myModal${album_index}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
                                         <div class="modal-dialog" role="document">
                                             <div class="modal-content">
@@ -346,7 +345,6 @@
         var description = $('textarea[name="content"]').val();
         var albumId = $("#albumId").val().replace(new RegExp(",","g"),"");
         pictures = $("#beforePictures").val();
-        alert(haudiopath);
         var album = JSON.stringify({
             'id': albumId, 'albumCategories': [{'id': $("#categoryId").val()}],
             'name': name, 'price': price * 100, 'open': open, 'description': description,
@@ -375,9 +373,7 @@
 
     /*图片删除*/
     function delPic(picId) {
-        alert("hello");
         var aid = $("#albumId").val().replace(new RegExp(",","g"),"");
-        alert(aid);
         var beforePicture = $("#beforePictures").val();
         var delPic = document.getElementById(picId).src;
         $("#" + picId).next().next().remove();
@@ -392,7 +388,6 @@
             }
         }
         $.post("/picture/delete", {id: picId, aid: $("#albumId").val().replace(new RegExp(",","g"),"")}, function () {
-            alert("删除成功！！！");
             $("#beforePictures").val(newPage);
         });
     }
