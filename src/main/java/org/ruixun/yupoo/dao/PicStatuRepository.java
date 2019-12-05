@@ -13,10 +13,14 @@ import java.util.List;
 public interface PicStatuRepository extends JpaRepository<PicStatu,Long> {
    //根据ID(Pid)获取图片
    PicStatu findPicStatusByPid(Long pid);
-   //设置点赞数和浏览数
+   //设置点赞数和浏览数和分享数
    @Modifying(clearAutomatically = true)
-   @Query("update PicStatu p set p.looknum= ?1,p.upnum= ?2 where  p.pid= ?3")
-   void  updateLooNumAndUpNum(Long looknum, Long upnum, Long pid);
+   @Query("update PicStatu p set p.looknum= ?1,p.upnum= ?2,p.share=?3 where  p.pid= ?4")
+   void  updateLooNumAndUpNum(Long looknum, Long upnum,Long share, Long pid);
+   //根据ID分享数数自增
+   @Modifying(clearAutomatically = true)
+   @Query("update PicStatu p set p.share=p.share+1 where p.pid=?1")
+   void  shareUp(Long pid);
 
    //根据Id点赞
    @Modifying(clearAutomatically = true)

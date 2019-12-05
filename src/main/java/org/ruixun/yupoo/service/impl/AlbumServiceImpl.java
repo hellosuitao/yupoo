@@ -178,7 +178,8 @@ public class AlbumServiceImpl implements AlbumService {/*相册service*/
             });
         }
         audioDao.deleteAllByAid(0l);
-        picStatuRepository.save(new PicStatu(null, album.getId(), 0l, 0l));
+
+        picStatuRepository.save(new PicStatu(null, album.getId(), 0l, 0l,0l));
     }
 
     @Override

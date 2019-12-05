@@ -15,28 +15,49 @@ public class AlbumCategory {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @NotEmpty
-    @Length(max = 16)//,message = "相册名过长")
+    @Length(max = 16,message = "分类名过长")
     @Column(name = "name")
     private String name;
-    @Column(name = "location_id")
-    private Long locationId;
-
-    public Long getLocationId() {
-        return locationId;
-    }
-
-    public AlbumCategory(String name, Long locationId) {
-        this.name = name;
-        this.locationId = locationId;
-    }
-
-    public void setLocationId(Long locationId) {
-        this.locationId = locationId;
-    }
-
+    @Column(name = "is_parent")
+    private boolean isParent=false;
+    private Long userId;
+    private Long parentId=0l;
     @ManyToMany(mappedBy = "albumCategories", fetch = FetchType.EAGER)
     @JsonIgnoreProperties(value = { "albumCategories" })
     private List<Album> albums;
+
+    public boolean getIsParent() {
+        return isParent;
+    }
+
+    public void setParent(boolean parent) {
+        isParent = parent;
+    }
+
+    public AlbumCategory(@NotEmpty @Length(max = 16) String name, Long parentId) {
+        this.name = name;
+        this.parentId = parentId;
+    }
+
+    public boolean isParent() {
+        return isParent;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public Long getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(Long parentId) {
+        this.parentId = parentId;
+    }
 
     public List<Album> getAlbums() {
         return albums;
@@ -51,14 +72,11 @@ public class AlbumCategory {
         return "AlbumCategory{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", locationId=" + locationId +
+                ", isParent=" + isParent +
+                ", parentId=" + parentId +
                 '}';
     }
 
-    public AlbumCategory(String name, String desc) {
-        this.name = name;
-
-    }
 
     public Long getId() {
         return id;

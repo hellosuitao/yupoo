@@ -17,18 +17,20 @@
             <div class="kv-item-content">
                 <select id="categoryId">
                     <option value="${album.albumCategories[0].id}">${album.albumCategories[0].name}</option>
-                    <#list albumCategories as albumCategory>
-                        <#if album.albumCategories[0].id!=albumCategory.id>
-                            <option value="${albumCategory.id}">${albumCategory.name}</option>
-                        </#if>
-                    </#list>
+                    <#if albumCategories??>
+                        <#list albumCategories as albumCategory>
+                            <#if album.albumCategories[0].id!=albumCategory.id>
+                                <option value="${albumCategory.id}">${albumCategory.name}</option>
+                            </#if>
+                        </#list>
+                    </#if>
                 </select>
             </div>
-            <div id="addCatagory">
-                <button onclick="addCatagory()"><img src="/img/skin_/ico01.png"></button>
-            </div>
-            <span class="kv-item-tip">没有合适的分类？尝试创建一个吧</span>
-            <img href="/img/skin_/ico01_1.png"/>
+<#--            <div id="addCatagory">-->
+<#--                <button onclick="addCatagory()"><img src="/img/skin_/ico01.png"></button>-->
+<#--            </div>-->
+<#--            <span class="kv-item-tip">没有合适的分类？尝试创建一个吧</span>-->
+<#--            <img href="/img/skin_/ico01_1.png"/>-->
         </div>
 
         <div class="kv-item ue-clear">

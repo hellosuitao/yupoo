@@ -9,26 +9,6 @@
 <script type="text/javascript" src="/js/jquery.js"></script>
 <script type="text/javascript" src="/js/global.js"></script>
 <title>底部内容页</title>
-    <script type="text/javascript">
-        $(window).load(function(){
-            var userId = localStorage.getItem("userId");
-        });
-
-        function findAll() {
-            $.post("/album/findAll",{userId:localStorage.getItem("userId")},function (data) {
-                $(".content").html(data);
-            })
-        }
-
-        function delPicfindAll() {
-            $.post("/delPic/findAll",{userId:localStorage.getItem("userId")},function (data) {
-                $(".content").html(data);
-            })
-        }
-
-
-
-    </script>
 </head>
 
 <body >
@@ -41,7 +21,8 @@
                 	<a href="javascript:;" class="ue-clear"><i class="nav-ivon"></i><span class="nav-text">商品管理</span></a>
                 	<ul class="subnav">
                         <li class="subnav-li" href="/album/showAdd" data-id="2"><a  href="javascript:;" class="ue-clear"><i class="subnav-icon"></i><span class="subnav-text">添加商品</span></a></li>
-                        <li class="subnav-li" onclick="findAll();"  data-id="3"><a  href="javascript:;"  class="ue-clear"><i class="subnav-icon"></i><span class="subnav-text">管理商品</span></a></li>
+                        <li class="subnav-li" href="/album/findAll"  data-id="3"><a  href="javascript:;" class="ue-clear"><i class="subnav-icon"></i><span class="subnav-text">管理商品</span></a></li>
+                        <li class="subnav-li" href="/albumCategory/findAll" data-id="4"><a href="javascript:;" class="ue-clear"><i class="subnav-icon"></i><span class="subnav-text">CategoryManage</span></a></li>
                     </ul>
                 </li>
 
@@ -50,7 +31,7 @@
                     <ul class="subnav">
 <!--                    	<li class="subnav-li" data-id="12"><a href="javascript:;" class="ue-clear"><i class="subnav-icon"></i><span class="subnav-text">流量总览</span></a></li>-->
 <!--                        <li class="subnav-li" data-id="13"><a onclick="backPic()" class="ue-clear"><i class="subnav-icon"></i><span class="subnav-text">回收站</span></a></li>-->
-                        <li class="subnav-li" onclick="delPicfindAll()" data-id="13"><a class="ue-clear"><i class="subnav-icon"></i><span class="subnav-text">回收站</span></a></li>
+                        <li class="subnav-li" href="/delPic/findAll" data-id="13"><a class="ue-clear"><i class="subnav-icon"></i><span class="subnav-text">回收站</span></a></li>
                     </ul>
                 </li>
             </ul>

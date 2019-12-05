@@ -37,25 +37,21 @@ public class DelPictureContonller {
 
     //查询所有回收站图片进行分页
     @RequestMapping("/findAll")
-    public  String findAll(@RequestParam(value = "userId")Long userId,
-                           @RequestParam(value = "page",defaultValue = "0") Integer page,
+    public  String findAll(@RequestParam(value = "page",defaultValue = "0") Integer page,
                            @RequestParam(value = "size",defaultValue = "3") Integer size,
-                           Map<String,Object> map){
-        System.out.println("------------------------------------");
+                           Map<String,Object> map,HttpServletRequest request){
+        Users user = FindUser.findUser(request);
         if (page == null){
             return "recyclebin";
         }
         if (page == -1) {
             page=0;
         }
-
-//        Page<DelPicture> all = delPictureService.findAll(page, size);
         /*suitao*/
-        Page<DelPicture> all = delPictureService.findAll(page, size, userId);
-        Page<DelAudio> delAudios = delAudioService.findAll(page,size,userId);
+        Page<DelPicture> all = delPictureService.findAll(page, size, user.getId());
+        Page<DelAudio> delAudios = delAudioService.findAll(page,size,user.getId());
         map.put("dels",all);
         map.put("delAudios",delAudios);
-        delAudios.forEach(System.out::println);
         return  "recyclebin";
     }
 

@@ -3,6 +3,7 @@ package org.ruixun.yupoo.controller;
 import org.ruixun.yupoo.bean.*;
 import org.ruixun.yupoo.dao.AlbumDao;
 import org.ruixun.yupoo.service.*;
+import org.ruixun.yupoo.utils.FindUser;
 import org.ruixun.yupoo.utils.Result;
 import org.ruixun.yupoo.utils.ResultUtils;
 import org.slf4j.Logger;
@@ -303,16 +304,17 @@ public class AlbumController {/*相册控制类*/
     }
 
     @RequestMapping(value = "/album/findAll")
-    public String findAll(@RequestParam("userId") Long userId
+    public String findAll(HttpServletRequest request
             , @RequestParam(value = "page", defaultValue = "0") Integer page
             , @RequestParam(value = "size", defaultValue = "6") Integer size
             , @RequestParam(value = "condition", defaultValue = "createDate") String condition
             , @RequestParam(value = "albumCategory", defaultValue = "0") String albumCategory, ModelMap map) {
-
+        Users user = FindUser.findUser(request);
         List<AlbumCategory> albumCategories = albumCategoryService.findAll();
         map.put("albumCategories", albumCategories);
 
-        Page<Album> albumPage = albumService.findAll(page, size, "id", albumCategory,userId);
+        Page<Album> albumPage = albumService.findAll(page, size, "id", albumCategory,user.getId());
+        System.out.println(albumPage.getContent());
         if (albumPage.getContent().size() > 0) {
             List<Long> messageSize = new ArrayList<>();
             List<Album> albums = albumPage.getContent();
@@ -331,9 +333,13 @@ public class AlbumController {/*相册控制类*/
     }
 
     @RequestMapping("/album/showAdd")
-    public String showAdd(ModelMap map) {
-        List<AlbumCategory> albumCategories = albumCategoryService.findAll();
-        map.put("albumCategories", albumCategories);
+    public String showAdd(ModelMap map,HttpServletRequest request) {
+        Users user = FindUser.findUser(request);
+        List<AlbumCategory> albumCategories = albumCategoryService.findAllSecond(user.getId(),false);
+        if(albumCategories!=null&&albumCategories.size()>0){
+            map.put("albumCategories", albumCategories);
+            return "form";
+        }
         return "form";
     }
 

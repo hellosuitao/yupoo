@@ -26,7 +26,12 @@ public class PicStatuServiceImpl implements PicStatuService {
     }
     @Override
     public String updateLuo(PicStatu picStatu) {
-        picStatuRepository.updateLooNumAndUpNum(picStatu.getLooknum(),picStatu.getUpnum(),picStatu.getPid());
+        picStatuRepository.updateLooNumAndUpNum(picStatu.getLooknum(),picStatu.getUpnum(),picStatu.getShare(),picStatu.getPid());
+        return "success";
+    }
+    @Override
+    public String shareUp(Long pid) {
+        picStatuRepository.shareUp(pid);
         return "success";
     }
     /*

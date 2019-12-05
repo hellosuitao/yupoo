@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -54,6 +55,19 @@ public class PicSatuController {
         }
         PicStatu byPid = picStatuService.findByPid(pid);
         return JsonUtils.objectTOJson(byPid.getUpnum());
+    }
+    //分享数自增
+    @ResponseBody
+    @RequestMapping("up/{pid}")
+    public  Result shareUp(@PathVariable("pid") Long pid){
+        System.out.println(pid);
+        String s = picStatuService.shareUp(pid);
+        System.out.println(s);
+        if (!s.equals("success")){
+            return ResultUtils.buildFail("修改失败");
+        }
+        PicStatu byPid = picStatuService.findByPid(pid);
+        return ResultUtils.buildSuccess(byPid);
     }
 
 }

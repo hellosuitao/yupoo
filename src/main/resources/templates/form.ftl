@@ -71,16 +71,18 @@
                     <div class="kv-item-content">
                         <select id="categoryId">
                             <option value="0">所有</option>
-                            <#list albumCategories as albumCategory>
-                                <option value="${albumCategory.id}">${albumCategory.name}</option>
-                            </#list>
+                            <#if albumCategories??>
+                                <#list albumCategories as albumCategory>
+                                    <option value="${albumCategory.id}">${albumCategory.name}</option>
+                                </#list>
+                            </#if>
                         </select>
                     </div>
-                    <div id="addCatagory">
-                        <button onclick="addCatagory()"><img src="/img/skin_/ico01.png"></button>
-                    </div>
-                    <span class="kv-item-tip">没有合适的分类？尝试创建一个吧</span>
-                    <img href="/img/skin_/ico01_1.png"/>
+<#--                    <div id="addCatagory">-->
+<#--                        <button onclick="addCatagory()"><img src="/img/skin_/ico01.png"></button>-->
+<#--                    </div>-->
+<#--                    <span class="kv-item-tip">没有合适的分类？尝试创建一个吧</span>-->
+<#--                    <img href="/img/skin_/ico01_1.png"/>-->
                 </div>
 
                 <div class="kv-item ue-clear">

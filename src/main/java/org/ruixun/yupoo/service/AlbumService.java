@@ -39,4 +39,5 @@ public interface AlbumService {/*相册接口*/
     void downshelf(List<Long> ids);//批量上架
 
     void updateAlbum(Album album);
+
 }

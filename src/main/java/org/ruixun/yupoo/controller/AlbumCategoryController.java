@@ -1,63 +1,119 @@
 package org.ruixun.yupoo.controller;
 
 import org.ruixun.yupoo.bean.AlbumCategory;
+import org.ruixun.yupoo.bean.Users;
 import org.ruixun.yupoo.service.AlbumCategoryService;
+import org.ruixun.yupoo.utils.FindUser;
+import org.ruixun.yupoo.utils.JsonUtils;
 import org.ruixun.yupoo.utils.Result;
 import org.ruixun.yupoo.utils.ResultUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 
 @Controller
-@ResponseBody
 @RequestMapping("/albumCategory")
 public class AlbumCategoryController {
     @Autowired
     private AlbumCategoryService albumCategoryService;
 
+    //添加分类
     @RequestMapping("/addAlbumCategory")
     @ResponseBody
-    public Result addAlbumCategory(@RequestBody @Valid AlbumCategory albumCategory, BindingResult bindingResult) {
-        System.out.println(albumCategory);
-        if(bindingResult.hasErrors()){
+    public Result addAlbumCategory(@RequestBody @Valid AlbumCategory albumCategory,
+                                   BindingResult bindingResult,
+                                   HttpServletRequest request) {
+        Users user = FindUser.findUser(request);
+        albumCategory.setUserId(user.getId());
+        if (bindingResult.hasErrors()) {
             List<ObjectError> errors = bindingResult.getAllErrors();
-            StringBuilder sb =new StringBuilder();
-          /*  for (ObjectError error : errors) {
-                String message = error.getDefaultMessage();
-                sb.append(message+",");
-            }*/
-            errors.forEach(error->sb.append(error+","));
+            StringBuilder sb = new StringBuilder();
+            errors.forEach(error -> sb.append(error + ","));
             return ResultUtils.buildFail(sb.toString());
         }
 
         Long id = albumCategoryService.saveAlbumCategory(albumCategory);
-        if(id!=null){
-            System.out.println(id);
+        if (id != null) {
             return ResultUtils.buildSuccess(id);
         }
-        return ResultUtils.buildFail("add fail");
+        return ResultUtils.buildFail("Fail add");
 
     }
 
-        @RequestMapping("/findAll")
-    public Result findAll() {
-            System.out.println(albumCategoryService.findAll()+"\n\n\n\n\n\n");
-
-            return ResultUtils.buildSuccess(albumCategoryService.findAll());
+    //查询所有分类
+    @RequestMapping("/findAll")
+    public String findAll(HttpServletRequest request, ModelMap map) {
+        Users user = FindUser.findUser(request);
+        List<AlbumCategory> albumCategories = albumCategoryService.findAll(user.getId());
+        String objectToJson = JsonUtils.objectToJson(albumCategories);
+        map.put("albumCategories",albumCategories);
+        return "category_manager";
     }
 
+    @RequestMapping("/deleteById")
+    public Result deleteById(@RequestParam("categoryId")Long categoryId){
+        albumCategoryService.delectTable(categoryId);
+        return ResultUtils.buildSuccess();
+    }
+
+    @RequestMapping("/deleteByIds")
+    public Result deleteByIds(@RequestParam("categoryIds")Long categoryIds){
+        albumCategoryService.delectTable(categoryIds);
+        return ResultUtils.buildSuccess();
+    }
+
+    @RequestMapping("/findByParentId")
+    @ResponseBody
+    public Result findByParentId(@RequestParam(value = "parentId")Long parentId){
+        List<AlbumCategory> albumCategoryByParentId = albumCategoryService.findAlbumCategoryByParentId(parentId);
+        if(albumCategoryByParentId!=null&&albumCategoryByParentId.size()>0){
+            return ResultUtils.buildSuccess(albumCategoryByParentId);
+        }
+        return ResultUtils.buildFail("No Data！");
+    }
+
+    //删除分类
+    @ResponseBody
     @RequestMapping("/deleteAlbumCategory")
     public Result deleteAlbumCategory(Long id) {
         albumCategoryService.delectTable(id);
         return ResultUtils.buildSuccess();
     }
+
+    //新增方法
+    //多级目录
+    @RequestMapping("/testLi")
+    public String returnTest(@RequestParam(name = "parentId",defaultValue ="0") Long id, Map<String, Object> map) {
+        List<AlbumCategory> albumCategory = albumCategoryService.findAlbumCategoryByParentId(id);
+        map.put("albumCategoryList", albumCategory);
+
+        return "test";
+    }
+    @RequestMapping("/testLi1")
+    public String returnLi(@RequestParam(name = "parentId",defaultValue ="0") Long id, Map<String, Object> map) {
+        List<AlbumCategory> albumCategory = albumCategoryService.findAlbumCategoryByParentId(id);
+        map.put("albumCategoryList", albumCategory);
+        return "test1";
+    }
+    //修改类名
+    @RequestMapping("/updateName")
+    @ResponseBody
+    public Result updateName(@RequestParam("name") String name,@RequestParam("id") Long id){
+        albumCategoryService.updataName(name, id);
+        return ResultUtils.buildSuccess();
+    }
+
 
 
 }

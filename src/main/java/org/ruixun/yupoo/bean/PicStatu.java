@@ -10,7 +10,6 @@ import javax.validation.constraints.NotNull;
 public class PicStatu {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
     private  Long id;
 
     private  Long pid;
@@ -19,6 +18,16 @@ public class PicStatu {
     private  Long upnum;
     @NotNull
     private  Long looknum;
+    @NotNull
+    private  Long share;
+
+    public Long getShare() {
+        return share;
+    }
+
+    public void setShare(Long share) {
+        this.share = share;
+    }
 
     public PicStatu() {
     }
@@ -29,6 +38,14 @@ public class PicStatu {
         this.upnum = upnum;
         this.looknum = looknum;
     }
+    public PicStatu(Long id,Long pid, Long upnum, Long looknum,Long share) {
+        this.id=id;
+        this.pid = pid;
+        this.upnum = upnum;
+        this.looknum = looknum;
+        this.share=share;
+    }
+
 
     public Long getId() {
         return id;
@@ -77,4 +94,5 @@ public class PicStatu {
                 ", looknum=" + looknum +
                 '}';
     }
+
 }

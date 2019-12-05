@@ -181,6 +181,12 @@
                                                                 <input type="text" class="form-control" id="categoryName" placeholder="浏览数" value="${likes[album_index].looknum}"
                                                                        name="looknum"/>
                                                             </div>
+
+                                                            <label for="edit_customerName" class="col-sm-2 control-label">分享数</label>
+                                                            <div class="col-sm-10">
+                                                                <input type="text" class="form-control" id="categoryName" placeholder="分享数" value="${likes[album_index].looknum}"
+                                                                       name="share"/>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </form>
@@ -311,21 +317,19 @@
     });
 
     function updatePicStatus(id) {
-        var aa="myModal"+id;
-        alert(aa)
-        $.post("/updateLuo",$("#picStatu"+id).serialize(),function (data) {
-
+        var upnum=$("#luo"+id).val().replace(new RegExp(",","g"),"");
+        var looknum=$("#yu"+id).val().replace(new RegExp(",","g"),"");
+        var share=$("#qiu"+id).val().replace(new RegExp(",","g"),"");
+        var pid=$("#pid"+id).val().replace(new RegExp(",","g"),"");
+        $.post("/updateLuo",{"pid":pid,"upnum" :upnum,"looknum":looknum,"share":share},function (data) {
             if(data!=null){
                 alert("修改成功")
                 window.location.href = "/album/findAll?page=${currentPage}"
             }else {
-
                 alert("修改失败")
                 window.location.href = "/album/findAll"
-
             }
         })
-
     }
 
     /*编辑商品*/
@@ -337,15 +341,10 @@
 
     function updateAlbum() {
         var name = $("#name").val();
-        var fakePrice = $("#price").val();
-        var temp = fakePrice.split(",");
-        var price = "";
-        for (var i = 0; i < temp.length; i++) {
-            price = price + temp[i];
-        }
+        var price = $("#price").val().replace(new RegExp(",","g"),"");
         var open = $(":input[name='need']:checked").val();
         var description = $('textarea[name="content"]').val();
-        var albumId = $("#albumId").val();
+        var albumId = $("#albumId").val().replace(new RegExp(",","g"),"");
         pictures = $("#beforePictures").val();
         alert(haudiopath);
         var album = JSON.stringify({
@@ -376,7 +375,9 @@
 
     /*图片删除*/
     function delPic(picId) {
-        var aid = $("#albumId");
+        alert("hello");
+        var aid = $("#albumId").val().replace(new RegExp(",","g"),"");
+        alert(aid);
         var beforePicture = $("#beforePictures").val();
         var delPic = document.getElementById(picId).src;
         $("#" + picId).next().next().remove();
@@ -390,7 +391,7 @@
                 }
             }
         }
-        $.post("/picture/delete", {id: picId, aid: $("#albumId").val()}, function () {
+        $.post("/picture/delete", {id: picId, aid: $("#albumId").val().replace(new RegExp(",","g"),"")}, function () {
             alert("删除成功！！！");
             $("#beforePictures").val(newPage);
         });
@@ -458,7 +459,7 @@
 
     /*删除视频*/
     function delAudio(audioId){
-        var aid = $("#albumId").val();
+        var aid = $("#albumId").val().replace(new RegExp(",","g"),"");
         $("#" + audioId).next().remove();
         $("#" + audioId).remove();
         $.post("/audio/delete", {id: audioId,aid:aid}, function () {
@@ -520,7 +521,7 @@
 
     /*修改封面*/
     function setCoverPath(picId) {
-        $.post("/picture/setCoverPath", {id:picId , aid: $("#albumId").val()}, function () {
+        $.post("/picture/setCoverPath", {id:picId , aid: $("#albumId").val().replace(new RegExp(",","g"),"")}, function () {
             alert("设置成功！！！");
         });
     }
@@ -568,7 +569,7 @@
     function upshelf() {
         var albumIds = new Array();
         $(":input[name='checkid']:checked").each(function () {
-            albumIds.push($(this).val());
+            albumIds.push($(this).val().replace(new RegExp(",","g"),""));
         });
         if (window.confirm("确认操作？")) {
             $.ajax({
@@ -597,7 +598,7 @@
     function downshelf() {
         var albumIds = new Array();
         $(":input[name='checkid']:checked").each(function () {
-            albumIds.push($(this).val());
+            albumIds.push($(this).val().replace(new RegExp(",","g"),""));
         });
         if (window.confirm("确认操作？")) {
             $.ajax({
@@ -625,7 +626,7 @@
     function deleteMany() {
         var albumIds = new Array();
         $(":input[name='checkid']:checked").each(function () {
-            albumIds.push($(this).val());
+            albumIds.push($(this).val().replace(new RegExp(",","g"),""));
         });
         var time = $(":input[name='time']:checked").val();
         var categoryId = $("#categoryId").val();
@@ -662,6 +663,8 @@
 
     }
     //修改点赞数和浏览数
+
+
 
     /*删除商品*/
     function btnDelete(id) {

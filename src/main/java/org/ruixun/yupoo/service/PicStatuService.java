@@ -24,4 +24,6 @@ public interface PicStatuService {
     String delByPid(Long pid);
     //根据ID自定义点赞数，浏览数
     String updateLuo(PicStatu picStatu);
+    //根据Id点赞数自增
+    String shareUp(Long pid);
 }

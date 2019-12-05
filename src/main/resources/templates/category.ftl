@@ -408,14 +408,6 @@
     })
 
     function likes(id, pid) {
-
-
-        // $.ajax({
-        // 	type: "post",
-        // 	url: "/likeup",
-        // 	data:JSON.stringify({"pid":id}),
-        // 	contentType: "application/json;charset=UTF-8",
-        // 	dataType: "json",
         $.post("/likeup",
                 {
                     "pid": id,
