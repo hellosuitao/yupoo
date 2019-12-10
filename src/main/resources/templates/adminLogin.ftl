@@ -202,6 +202,7 @@
 			}
 
 		$(document).ready(function() {
+			localStorage.setItem("language","zh_CN");
 				/*
 					var defaults = {
 					containerID: 'toTop', // fading element id
