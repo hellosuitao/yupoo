@@ -13,6 +13,8 @@ public interface DelAudioService {
 
     void deleteById(Long id);//根据id删除音频
 
+    void deleteByAudioId(Long id);
+
     Page<DelAudio> findAll(Integer page, Integer size, Long userId);//根据用户id查所属音频
 
     List<DelAudio> findAllByIds(List<Long> list);

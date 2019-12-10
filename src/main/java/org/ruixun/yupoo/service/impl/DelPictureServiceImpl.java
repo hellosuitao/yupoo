@@ -113,10 +113,9 @@ public class DelPictureServiceImpl implements DelPictureService {
     //删除多个图片
     @Override
     public String delByPids(List<Long> pids) {
-        List<Long> longs=new ArrayList<>();
-        List<DelPicture> in = delPictureRepository.findDelPicturesByPidIn(pids);
-        in.forEach(i->longs.add(i.getPid()));
-        List<String> paths = delPictureRepository.findPathByPids(longs);
+        List<DelPicture> delPictures = delPictureRepository.findDelPicturesByPidIn(pids);
+        List<String> paths = delPictureRepository.findPathByPids(pids);
+        System.out.println(pids);
         delPictureRepository.deleteDelPictureByPidIn(pids);
 //        messagesRepository.deleteByPidIn(longs);
         paths.forEach(path->delService.delPicByPath(path));
@@ -129,7 +128,6 @@ public class DelPictureServiceImpl implements DelPictureService {
         PictureUtils pictureUtils = new PictureUtils();
         delpictures.forEach(delPicture -> delPicture.setUpdateTime(new Date()));
         List<Picture> lists = pictureUtils.DelToPic(delpictures);
-        lists.forEach(System.out::println);
         lists.forEach(list->pictureDao.save(list));
         Map<Long, String> map = new HashMap<>();
         delpictures.forEach(delPicture -> {
@@ -140,8 +138,9 @@ public class DelPictureServiceImpl implements DelPictureService {
             }
         });
         map.keySet().forEach(lo -> {
+            String s = map.get(lo)+",";
             Album albumById = albumDao.findAlbumById(lo);
-            albumDao.updatePictures(albumById.getPictures()+","+map.get(lo),lo);
+            albumDao.updatePictures(albumById.getPictures()+","+s,lo);
         });
         List<Long> pids=new ArrayList<Long>();
         delpictures.forEach(delPicture -> pids.add(delPicture.getPid()));

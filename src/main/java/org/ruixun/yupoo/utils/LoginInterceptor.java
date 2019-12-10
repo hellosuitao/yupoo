@@ -109,7 +109,8 @@ public class LoginInterceptor implements HandlerInterceptor {
             //设置编码格式
             response.setCharacterEncoding("UTF-8");
             response.setContentType("application/json;charset=UTF-8");
-            System.out.println("请先登录");
+
+        System.out.println("请先登录");
             //以json格式返回给前端一个提示
             Result result = ResultUtils.buildFail("请先登录");
             String returnJson = JsonUtils.objectToJson(result);

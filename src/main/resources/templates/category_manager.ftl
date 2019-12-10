@@ -1,4 +1,5 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN""http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<#import "/spring.ftl" as spring/>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=emulateIE7"/>
@@ -76,9 +77,12 @@
 <#--                                <input type="checkbox" id="selectall" onclick="selectAll(this)" value=""/>&nbsp;&nbsp;Check-->
 <#--                                All-->
 <#--                            </th>-->
-                            <th>CategoryId</th>
-                            <th>CategoryName</th>
-                            <th>Operation</th>
+<#--                            <th>CategoryId</th>-->
+<#--                            <th>CategoryName</th>-->
+<#--                            <th>Operation</th>-->
+                            <th><@spring.message code="category_manager.CategoryId" /></th>
+                            <th><@spring.message code="category_manager.CategoryName" /></th>
+                            <th><@spring.message code="category_manager.Operation" /></th>
                         </tr>
                         </thead>
                         <#--数据表-->
@@ -165,9 +169,10 @@
                     type: "json",
                     success: function (data) {
                         if (data.status == "success") {
-                            alert("Append successfully");
                             window.location.reload();
-                        } else {
+                        } else if(data.message){
+                            alert(data.message);
+                        }else{
                             alert("Fail append");
                         }
                     }

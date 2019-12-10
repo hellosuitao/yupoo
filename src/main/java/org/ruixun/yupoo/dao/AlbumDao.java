@@ -87,4 +87,8 @@ public interface AlbumDao extends JpaRepository<Album,Long>{
     void updatePictures(String pictures,Long aid);
 
     Page<Album> findAllByUid(Pageable pageable,Long userId);
+
+    @Modifying
+    @Query("update Album a set a.id = ?1 where a.audios = ?2")
+    void updateAudioPath(Long aid, String path);
 }

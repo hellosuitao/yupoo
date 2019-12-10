@@ -9,12 +9,13 @@
         <th>商品价格</th>
         <th>商品分类</th>
         <th>商品描述</th>
-        <th>点赞/评论</th>
+        <th>点赞/评论/分享</th>
         <th>上架时间</th>
         <th>上架状态</th>
         <th>操作</th>
     </tr>
 
+    <#--如果只查询1个-->
     <#if album??>
         <tr>
             <td>
@@ -25,7 +26,7 @@
             <td>${album.price}</td>
             <td>${album.albumCategories[0].name}</td>
             <td>${album.description}</td>
-            <td><span id="looknum0">${likes.upnum}</span>/<span id="upnum0">${likes.looknum}</span></td>
+            <td><span id="looknum0">${likes.upnum}</span>/<span id="upnum0">${likes.looknum}</span>/<span id="share0">${likes.share}</span></td>
             <td>${album.createDate}</td>
             <td id="${album.id}">${album.open}</td>
             <td>
@@ -58,6 +59,11 @@
                                             <input type="text" class="form-control" id="categoryName" placeholder="浏览数"
                                                    name="looknum"/>
                                         </div>
+                                        <label for="edit_customerName" class="col-sm-2 control-label">分享数</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" id="categoryName" placeholder="分享数" value="${likes[album_index].share}"
+                                                   name="share"/>
+                                        </div>
                                     </div>
                                 </div>
                             </form>
@@ -73,6 +79,7 @@
             </td>
         </tr>
     <#else>
+        <#--否则查询多个-->
         <#list albumPage.content as album>
             <tr>
                 <td>
@@ -83,7 +90,7 @@
                 <td>${album.price}</td>
                 <td>${album.albumCategories[0].name}</td>
                 <td>${album.description}</td>
-                <td><span id="looknum${album_index}">${likes[album_index].upnum}</span>/<span id="upnum${album_index}">${likes[album_index].looknum}</span></td>
+                <td><span id="looknum${album_index}">${likes[album_index].upnum}</span>/<span id="upnum${album_index}">${likes[album_index].looknum}</span>/<span id="share${album_index}">${likes[album_index].share}</span></td>
                 <td>${album.createDate}</td>
                 <td id="${album.id}">${album.open}</td>
                 <td>
@@ -105,16 +112,21 @@
                                 <form id="picStatu${album_index}">
                                     <div class="modal-body">
                                         <div class="form-group">
-                                            <input type="hidden" value="${album.id}" name="pid" >
+                                            <input type="hidden" value="${album.id}" id="pid${album_index}" >
                                             <label for="edit_customerName" class="col-sm-2 control-label">点赞数</label>
                                             <div class="col-sm-10">
-                                                <input type="text" class="form-control" id="categoryName" placeholder="点赞数" value="${likes[album_index].upnum}"
+                                                <input type="text" class="form-control" id="luo${album_index}" placeholder="点赞数" value="${likes[album_index].upnum}"
                                                        name="upnum"/>
                                             </div>
                                             <label for="edit_customerName" class="col-sm-2 control-label">浏览数</label>
                                             <div class="col-sm-10">
-                                                <input type="text" class="form-control" id="categoryName" placeholder="浏览数" value="${likes[album_index].looknum}"
+                                                <input type="text" class="form-control" id="yu${album_index}" placeholder="浏览数" value="${likes[album_index].looknum}"
                                                        name="looknum"/>
+                                            </div>
+                                            <label for="edit_customerName" class="col-sm-2 control-label">分享数</label>
+                                            <div class="col-sm-10">
+                                                <input type="text" class="form-control" id="qiu${album_index}" placeholder="分享数" value="${likes[album_index].share}"
+                                                       name="share"/>
                                             </div>
                                         </div>
                                     </div>
@@ -137,7 +149,7 @@
     <nav aria-label="Page navigation">
         <ul class="pagination">
             <#list 1..totalPages as i>
-                <li><a onclick="findByPage(${i});">${i}</a></li>
+                <li><a onclick="findByPage(${i})">${i}</a></li>
             </#list>
         </ul>
     </nav>
@@ -145,19 +157,12 @@
 <#elseif (currentPage<=2)&&(totalPages>5)>
     <nav aria-label="Page navigation">
         <ul class="pagination">
-            <li><a onclick="findByPage(1);">1</a>
-            </li>
-            <li><a onclick="findByPage(2);">2</a>
-            </li>
-            <li><a onclick="findByPage(3);">3</a>
-            </li>
-            <li><a onclick="findByPage(4);">4</a>
-            </li>
-            <li><a onclick="findByPage(5);">5</a>
-            </li>
-            <li><a onclick="findByPage(${currentPage+1});"
+            <#list 1..5 as i>
+                <li><a onclick="findByPage(${i})">${i}</a></li>
+            </#list>
+            <li><a onclick="findByPage(${currentPage+2})"
                    aria-label="Next">下一页</a></li>
-            <li><a onclick="findByPage(${totalPages});"
+            <li><a onclick="findByPage(${totalPages})"
                    aria-label="Next">尾页</a>
             </li>
         </ul>
@@ -167,7 +172,7 @@
     <nav aria-label="Page navigation">
         <ul class="pagination">
             <#list 1..totalPages as i>
-                <li><a onclick="findByPage(i);">${i}</a></li>
+                <li><a onclick="findByPage(${i})">${i}</a></li>
             </#list>
         </ul>
     </nav>
@@ -176,24 +181,25 @@
     <nav aria-label="Page navigation">
         <ul class="pagination">
             <li>
-                <a onclick="findByPage(1);" aria-label="Previous">
+                <a onclick="findByPage(1)" aria-label="Previous">
                     首页
                 </a>
             </li>
             <li>
-                <a onclick="findByPage(${currentPage-1})" ; aria-label="Previous">
+                <a onclick="findByPage(${currentPage})">
                     上一页
                 </a>
             </li>
-            <li><a onclick="findByPage(${currentPage-4});">${currentPage-4}</a>
             </li>
-            <li><a onclick="findByPage(${currentPage-3});">${currentPage-3}</a>
+            <li><a onclick="findByPage(${currentPage-3})">${currentPage-3}</a>
             </li>
-            <li><a onclick="findByPage(${currentPage-2});">${currentPage-2}</a>
+            <li><a onclick="findByPage(${currentPage-2})">${currentPage-2}</a>
             </li>
-            <li><a onclick="findByPage(${currentPage-1});">${currentPage-1}</a>
+            <li><a onclick="findByPage(${currentPage-1})">${currentPage-1}</a>
             </li>
-            <li><a onclick="findByPage(${currentPage});">${currentPage}</a>
+            <li><a onclick="findByPage(${currentPage})">${currentPage}</a>
+            </li>
+            <li><a onclick="findByPage(${currentPage+1})">${currentPage+1}</a>
             </li>
         </ul>
     </nav>
@@ -202,31 +208,28 @@
     <nav aria-label="Page navigation">
         <ul class="pagination">
             <li>
-                <a onclick="findByPage(1);" aria-label="Previous">
+                <a onclick="findByPage(1)">
                     首页
                 </a>
             </li>
             <li>
-                <a onclick="findByPage(${currentPage-1});" aria-label="Previous">
+                <a onclick="findByPage(${currentPage})">
                     上一页
                 </a>
             </li>
-            <li><a onclick="findByPage(${currentPage-2});">${currentPage-2}</a>
             </li>
-            <li><a onclick="findByPage(${currentPage-1});">${currentPage-1}</a>
-            </li>
-            <li><a onclick="findByPage(${currentPage});">${currentPage}</a></li>
-            <li><a onclick="findByPage(${currentPage+1});">${currentPage+1}</a>
-            </li>
-            <li><a onclick="findByPage(${currentPage+2});">${currentPage+2}</a>
-            </li>
+            <li><a onclick="findByPage(${currentPage-1})">${currentPage-1}</a></li>
+            <li><a onclick="findByPage(${currentPage})">${currentPage}</a></li>
+            <li><a onclick="findByPage(${currentPage+1})">${currentPage+1}</a></li>
+            <li><a onclick="findByPage(${currentPage+2})">${currentPage+2}</a></li>
+            <li><a onclick="findByPage(${currentPage+3})">${currentPage+3}</a></li>
             <li>
-                <a onclick="findByPage(${currentPage+1});" aria-label="Next">
+                <a onclick="findByPage(${currentPage+2})" aria-label="Next">
                     下一页
                 </a>
             </li>
             <li>
-                <a onclick="findByPage(${totalPages});" aria-label="Next">
+                <a onclick="findByPage(${totalPages})" aria-label="Next">
                     尾页
                 </a>
             </li>

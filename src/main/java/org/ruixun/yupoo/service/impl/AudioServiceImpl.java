@@ -1,11 +1,10 @@
 package org.ruixun.yupoo.service.impl;
 
-import org.ruixun.yupoo.bean.Audio;
-import org.ruixun.yupoo.bean.DelAudio;
-import org.ruixun.yupoo.bean.DelPicture;
-import org.ruixun.yupoo.bean.Picture;
+import org.ruixun.yupoo.bean.*;
+import org.ruixun.yupoo.dao.AlbumDao;
 import org.ruixun.yupoo.dao.AudioDao;
 import org.ruixun.yupoo.dao.DelAudioDao;
+import org.ruixun.yupoo.service.AlbumService;
 import org.ruixun.yupoo.service.AudioService;
 import org.ruixun.yupoo.utils.StaticProperties;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +33,8 @@ public class AudioServiceImpl implements AudioService {
     private StaticProperties staticProperties;
     @Autowired
     private AudioService audioService;
+    @Autowired
+    private AlbumDao albumDao;
 
     @Override
     public String addAudio(MultipartFile fileaudio,Long userId) {
@@ -67,8 +68,13 @@ public class AudioServiceImpl implements AudioService {
     }
 
     @Override
-    public void deleteAudioById(Long id,Long aid,Long userId) {
+    public void deleteAudioById(Long id,Long userId) {
         Audio audio = audioDao.getOne(id);
+        Long aid = audio.getAid();
+        Album album = albumDao.getOne(aid);
+        String audios = album.getAudios();
+        audios = audios.replaceAll(audio.getPath()+",","");
+        albumDao.updateAudioPath(aid,audios);
         DelAudio delAudio = new DelAudio(id,aid,audio.getName(),audio.getPath(),audio.getAsize(),new Date(),null,userId);
         delAudioDao.save(delAudio);
         audioDao.deleteById(id);

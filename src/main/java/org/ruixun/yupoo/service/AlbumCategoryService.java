@@ -26,4 +26,8 @@ public interface AlbumCategoryService {
     void  updataName(String name, Long id);
 
     List<AlbumCategory> findAllSecond(Long id, boolean b);
+
+    Boolean similarName(String name,Long userId);
+
+//    void deleteCategory(Long categoryId);
 }

@@ -8,6 +8,7 @@ import org.ruixun.yupoo.service.PictureService;
 import org.ruixun.yupoo.utils.FindUser;
 import org.ruixun.yupoo.utils.Result;
 import org.ruixun.yupoo.utils.ResultUtils;
+import org.ruixun.yupoo.utils.StaticProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -15,8 +16,16 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
+import java.util.*;
 import java.util.List;
 
 /*
@@ -39,9 +48,9 @@ public class PictureController {/*图片控制类*/
 
     @RequestMapping("/picture/delete")/*删除图片*/
     @ResponseBody
-    public Result delete(@RequestParam("id") Long id, @RequestParam("aid") Long aid, HttpServletRequest request){
+    public Result delete(@RequestParam("id") Long id, HttpServletRequest request){
         Users user = FindUser.findUser(request);
-        pictureService.deleteById(id,aid,user.getId());
+        pictureService.deleteById(id,user.getId());
         return ResultUtils.buildSuccess();
     }
 
@@ -54,4 +63,12 @@ public class PictureController {/*图片控制类*/
         return "show_albums";
     }
 
+    @RequestMapping("/picture/setWaterMark")
+    @ResponseBody
+    public Result setWaterMark(MultipartFile[] file,Long[] picIds) {
+        String newPicWithWaterMark = pictureService.setWaterMark(file,Arrays.asList(picIds));
+        if(newPicWithWaterMark!=null&&newPicWithWaterMark!=""){
+            return ResultUtils.buildSuccess(newPicWithWaterMark);
+        }else return ResultUtils.buildFail("fail changed watermark");
+    }
 }

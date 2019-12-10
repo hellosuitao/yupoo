@@ -4,7 +4,6 @@ import org.ruixun.yupoo.bean.*;
 import org.ruixun.yupoo.dao.*;
 import org.ruixun.yupoo.service.*;
 import org.ruixun.yupoo.utils.StaticProperties;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -13,7 +12,10 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 /*
  * 作者：suitao*/
@@ -42,6 +44,16 @@ public class AlbumServiceImpl implements AlbumService {/*相册service*/
     private AudioDao audioDao;
     @Autowired
     private StaticProperties staticProperties;
+    @Autowired
+    private DelPictureRepository delPictureRepository;
+    @Autowired
+    private DelAudioDao delAudioDao;
+    @Autowired
+    private DelPictureService delPictureService;
+    @Autowired
+    private DelAudioService delAudioService;
+    @Autowired
+    private AudioService audioService;
 
     @Override
     /*findAll()方法*/
@@ -59,13 +71,13 @@ public class AlbumServiceImpl implements AlbumService {/*相册service*/
     }
 
     /*前台 根据条件  查询所有*/
-    public Page<Album> findAll(Integer page, Integer size, String condition, String albumCategory,Long userId) {
+    public Page<Album> findAll(Integer page, Integer size, String condition, String albumCategory, Long userId) {
         if (albumCategory.equals("0")) {
             PageRequest pageRequest = new PageRequest(page, size, Sort.Direction.DESC, condition);
-            if(userId==0l){
+            if (userId == 0l) {
                 return albumDao.findAll(pageRequest);
             }
-            return albumDao.findAllByUid(pageRequest,userId);
+            return albumDao.findAllByUid(pageRequest, userId);
         }
         if (!albumCategory.equals("0")) {
             List<AlbumCategory> categories = new ArrayList<>();
@@ -73,10 +85,10 @@ public class AlbumServiceImpl implements AlbumService {/*相册service*/
             category.setId(Long.valueOf(albumCategory));
             categories.add(category);
             PageRequest pageRequest = new PageRequest(page, size, Sort.Direction.DESC, condition);
-            if(userId==0l){
-                 return albumDao.findAlbumsByAlbumCategories(categories, pageRequest);
+            if (userId == 0l) {
+                return albumDao.findAlbumsByAlbumCategories(categories, pageRequest);
             }
-            return albumDao.findAllByUidAndAlbumCategories(userId,categories,pageRequest);
+            return albumDao.findAllByUidAndAlbumCategories(userId, categories, pageRequest);
         }
         return null;
     }
@@ -94,7 +106,8 @@ public class AlbumServiceImpl implements AlbumService {/*相册service*/
     @Override
     public void updateAlbum(Album album) {
         Album oldAlbum = albumDao.findAlbumById(album.getId());
-        album.setPictures(album.getPictures());
+        album.setPictures(oldAlbum.getPictures()+album.getPictures());
+        album.setAudios(oldAlbum.getAudios()+album.getAudios());
         album.setUid(1l);
         album.setAsize(oldAlbum.getAsize());
         album.setCreateDate(oldAlbum.getCreateDate());
@@ -102,7 +115,6 @@ public class AlbumServiceImpl implements AlbumService {/*相册service*/
         String[] split = album.getPictures().split(",");
         for (int i = 0; i < split.length; i++) {
             if (split[i] != null || split[i] != "") {
-                album.setCoverpath(split[0]);
                 pictureDao.setAid(album.getId(), split[i]);
             }
         }
@@ -118,21 +130,12 @@ public class AlbumServiceImpl implements AlbumService {/*相册service*/
 
     @Override
     public void addAlbum(Album album) {
-        System.out.println(album);
-//        String[] strings = album.getPictures().split(",");
-//        String pictures = "";
-//        for (int i = 0; i < strings.length; i++) {
-//            if(strings[i]!=null&&!strings[i].equals("")){
-//                pictures = pictures + "/image/" + strings[i].split("/image/")[1] + ",";
-//            }
-//        }
         album.setCoverpath(album.getPictures().trim().substring(0, album.getPictures().indexOf(",")));
         album.setCreateDate(new Date());
         albumDao.save(album);
         String[] split = album.getPictures().split(",");
         for (int i = 0; i < split.length; i++) {
             if (split[i] != null || !split[i].equals("")) {
-//                album.setCoverpath(split[0]);
                 pictureDao.setAid(album.getId(), split[i]);
             }
         }
@@ -141,22 +144,15 @@ public class AlbumServiceImpl implements AlbumService {/*相册service*/
             String[] audios = album.getAudios().split(",");
             for (int i = 0; i < audios.length; i++) {
                 if (audios[i] != null || !audios[i].equals("")) {
-//                album.setCoverpath(split[0]);
                     audioDao.setAid(album.getId(), audios[i]);
                 }
             }
         }
 
         List<Picture> fakePictures = pictureDao.findPicturesByAid(0l);
-        if (fakePictures.size()>0) {
+        if (fakePictures!=null&&fakePictures.size() > 0) {
             fakePictures.forEach(picture -> {
-                String path = picture.getPath();
-//                /*target 路径*/
-//                String filePath =new File(this.getClass().getResource("/").getPath()).getAbsolutePath()+"\\static"+path;
-//                File file = new File(filePath);
-//                file.delete();
-                /*项目路径*/
-                String newPathName = staticProperties.getAudiopath() + path.split(staticProperties.getStaticport())[1];
+                String newPathName = staticProperties.getPicturepath() + picture.getPath().split(staticProperties.getStaticport())[1];
                 File file1 = new File(newPathName);
                 file1.delete();
             });
@@ -164,22 +160,15 @@ public class AlbumServiceImpl implements AlbumService {/*相册service*/
         pictureDao.deleteByAid(0l);
 
         List<Audio> fakeAudios = audioDao.findAllByAid(0l);
-        if (fakeAudios.size()>0) {
+        if (fakeAudios!=null&&fakeAudios.size() > 0) {
             fakeAudios.forEach(audio -> {
-                String path = audio.getPath();
-//                /*target 路径*/
-//                String filePath =new File(this.getClass().getResource("/").getPath()).getAbsolutePath()+"\\static"+path;
-//                File file = new File(filePath);
-//                file.delete();
-                /*项目路径*/
-                String newPathName = staticProperties.getAudiopath() + path.split(staticProperties.getStaticport())[1];
+                String newPathName = staticProperties.getPicturepath() + audio.getPath().split(staticProperties.getStaticport())[1];
                 File file1 = new File(newPathName);
                 file1.delete();
             });
         }
         audioDao.deleteAllByAid(0l);
-
-        picStatuRepository.save(new PicStatu(null, album.getId(), 0l, 0l,0l));
+        picStatuRepository.save(new PicStatu(null, album.getId(), 0l, 0l, 0l));
     }
 
     @Override
@@ -216,8 +205,8 @@ public class AlbumServiceImpl implements AlbumService {/*相册service*/
     }
 
     //后台条件查询
-    public Page<Album> findAlbumsByCondition2(String time, Long categoryId, String inputValue, String selectBy, Integer page, Integer size,Long userId) {/*条件查询*/
-        System.out.println(time + "," + categoryId + "," + selectBy + "," + inputValue + "," + page + "," + size+","+userId);
+    public Page<Album> findAlbumsByCondition2(String time, Long categoryId, String inputValue, String selectBy, Integer page, Integer size, Long userId) {/*条件查询*/
+        System.out.println(time + "," + categoryId + "," + selectBy + "," + inputValue + "," + page + "," + size + "," + userId);
         //初始化分页
         PageRequest pageRequest = new PageRequest(page, size, Sort.Direction.DESC, "id");
         //初始化分类
@@ -233,45 +222,45 @@ public class AlbumServiceImpl implements AlbumService {/*相册service*/
         //只根据商品名查
         if (categoryId == 0l && selectBy.equals("0") && time.equals("0") && inputValue.equals("")) {
 //            return albumDao.findAll(pageRequest);
-            return albumDao.findAllByUid(pageRequest,userId);
+            return albumDao.findAllByUid(pageRequest, userId);
         }
         if (categoryId == 0l && selectBy.equals("0") && inputValue.equals("")) {
 //            return albumDao.findAlbumsByCreateDateAfter(beforeTime, pageRequest);
-            return albumDao.findAllByUidAndCreateDateAfter(userId,beforeTime,pageRequest);
+            return albumDao.findAllByUidAndCreateDateAfter(userId, beforeTime, pageRequest);
         }
         if (categoryId == 0l && selectBy.equals("0")) {
             //查询所有
             if (time.equals("0")) {
 //                return albumDao.findAlbumsByNameLike('%' + inputValue + '%', pageRequest);
-                return albumDao.findAllByUidAndNameLike(userId,'%' + inputValue + '%', pageRequest);
+                return albumDao.findAllByUidAndNameLike(userId, '%' + inputValue + '%', pageRequest);
             }
             //时间查询
-            return albumDao.findAllByUidAndNameLikeAndCreateDateAfter(userId,'%' + inputValue + '%', beforeTime, pageRequest);
+            return albumDao.findAllByUidAndNameLikeAndCreateDateAfter(userId, '%' + inputValue + '%', beforeTime, pageRequest);
         }
         if (categoryId == 0l && selectBy.equals("albumName")) {
             if (time.equals("0")) {
                 System.out.println("hello===================================");
-                return albumDao.findAllByUidAndNameLike(userId,'%' + inputValue + '%', pageRequest);
+                return albumDao.findAllByUidAndNameLike(userId, '%' + inputValue + '%', pageRequest);
             }
-            return albumDao.findAllByUidAndNameLikeAndCreateDateAfter(userId,'%' + inputValue + '%', beforeTime, pageRequest);
+            return albumDao.findAllByUidAndNameLikeAndCreateDateAfter(userId, '%' + inputValue + '%', beforeTime, pageRequest);
         }
 //      前端单选 0：查询全部，1：近三天，7：近一周，30：近一月
         //查询全部+分类 查询
         if (categoryId == 0l && !selectBy.equals("albumName")) {
-            return albumDao.findAllByUid(pageRequest,userId);
+            return albumDao.findAllByUid(pageRequest, userId);
         }
         //根据分类+时间查询  只根据分类查询
         if (categoryId != 0l && !selectBy.equals("albumName")) {
             if (time.equals("0")) {
-                return albumDao.findAllByUidAndAlbumCategories(userId,categories, pageRequest);
+                return albumDao.findAllByUidAndAlbumCategories(userId, categories, pageRequest);
             }
-            return albumDao.findAllByUidAndAlbumCategoriesAndCreateDateAfter(userId,categories, beforeTime, pageRequest);
+            return albumDao.findAllByUidAndAlbumCategoriesAndCreateDateAfter(userId, categories, beforeTime, pageRequest);
             //分类 + 商品名模糊查询
         } else if (selectBy.equals("albumName")) {
             if (time.equals("0")) {
-                return albumDao.findAllByUidAndAlbumCategoriesAndNameLike(userId,categories, '%' + inputValue + '%', pageRequest);
+                return albumDao.findAllByUidAndAlbumCategoriesAndNameLike(userId, categories, '%' + inputValue + '%', pageRequest);
             }
-            return albumDao.findAllByUidAndAlbumCategoriesAndNameLikeAndCreateDateAfter(userId,categories, '%' + inputValue + '%', beforeTime, pageRequest);
+            return albumDao.findAllByUidAndAlbumCategoriesAndNameLikeAndCreateDateAfter(userId, categories, '%' + inputValue + '%', beforeTime, pageRequest);
             //根据商品名模糊查询
         }
         return null;
@@ -287,59 +276,46 @@ public class AlbumServiceImpl implements AlbumService {/*相册service*/
         /*批量删除点赞*/
         picStatuService.delByPids(ids);
         /*删除数据库图片*/
-        String pictures = album.getPictures();
-        String[] paths = pictures.split(",");
-        List<String> pathss = Arrays.asList(paths);
-        pathss.forEach(onePath -> {
-//            String newPathName = new File("").getAbsolutePath() + "\\src\\main\\resources\\static" + onePath;
-            String newPathName = staticProperties.getPicturepath()+ onePath.split(staticProperties.getStaticport())[1];
-//            String newClassPath = new File(this.getClass().getResource("/").getPath()).getAbsolutePath() + "\\static" + onePath;
-            File newFile = new File(newPathName);
-            newFile.delete();
-//            File newClassFile = new File(newClassPath);
-//            newClassFile.delete();
-        });
-        /*批量删除图片*/
-        pictureService.deleteByAids(ids);
+        List<Picture> pictures = pictureService.findPicturesByAid(aid);
+        if (pictures != null && pictures.size() > 0) {
+            pictures.forEach(picture -> {
+                pictureService.deleteById(picture.getId(),album.getUid());
+            });
+        }
+        /*删除回收站图片*/
+        List<DelPicture> delPictures = delPictureRepository.findByAid(album.getId());
+        List<Long> pids = new ArrayList<>();
+        if (delPictures != null && delPictures.size() > 0) {
+            delPictures.forEach(delPicture -> {
+                pids.add(delPicture.getPid());
+            });
+        }
+        delPictureService.delByPids(pids);
         /*删除视频*/
         List<Audio> audios = audioDao.findAllByAid(aid);
-        audios.forEach(audio -> {
-            String newPath = staticProperties.getPicturepath()+audio.getPath().split(staticProperties.getStaticport())[1];
-            File file = new File(newPath);
-            file.delete();
-        });
-        audioDao.deleteAllByAid(aid);
-
+        if (audios != null && audios.size() > 0) {
+            audios.forEach(audio -> {
+                audioService.deleteAudioById(audio.getId(),album.getUid());
+            });
+        }
+        /*删除回收站视频*/
+        List<DelAudio> delAudios = delAudioDao.findByAid(aid);
+        if (delAudios != null && delAudios.size() > 0) {
+            delAudios.forEach(delAudio -> {
+                delAudioService.deleteByAudioId(delAudio.getAudioId());
+            });
+        }
         /*批量删除商品*/
         albumDao.deleteById(aid);
     }
 
     @Override
-    //批量删除商品 同时删除图片 评论，点赞，不需要回回收站
+    //批量删除商品 同时删除图片 视频 评论，点赞，不需要回回收站
     public void deleteByIds(List<Long> ids) {
-        List<Album> albums = albumDao.findByIdIn(ids);
-        /*批量删除评论*/
-        messagesService.delMessages(ids);
-        /*批量删除点赞*/
-        picStatuService.delByPids(ids);
-        /*删除数据库图片*/
-        albums.forEach(album -> {
-            String pictures = album.getPictures();
-            String[] paths = pictures.split(",");
-            List<String> pathss = Arrays.asList(paths);
-            pathss.forEach(onePath -> {
-                String[] split = onePath.split(staticProperties.getStaticport());
-                if (!split.equals("") || split != null) {
-                    String newPathName =staticProperties.getPicturepath()+split[1];
-                    File newFile = new File(newPathName);
-                    newFile.delete();
-                }
+        if (ids != null && ids.size() > 0) {
+            ids.forEach(id -> {
+                deleteByAid(id);
             });
-        });
-
-        /*批量删除图片*/
-        pictureService.deleteByAids(ids);
-        /*批量删除商品*/
-        albumDao.deleteByIds(ids);
+        }
     }
 }

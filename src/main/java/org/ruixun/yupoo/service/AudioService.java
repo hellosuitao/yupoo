@@ -15,8 +15,7 @@ public interface AudioService {
 
     List<Audio> findAudioById(Long valueOf);//根据商品id查音频
 
-
-    void deleteAudioById(Long id,Long aid,Long userId);//假删除，存入回收站
+    void deleteAudioById(Long id,Long userId);//假删除，存入回收站
 
 //    String checkDel(Long userId);//检查过期音频
 

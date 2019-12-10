@@ -38,11 +38,17 @@ public interface DelPictureRepository extends JpaRepository<DelPicture,Long> {
 
     //根据Pid删除图片
     void  deleteByPid(Long pid);
+    void  deleteByPidIn(List<Long> pids);
+
+    void deleteByAid(Long aid);
+    void deleteByAidIn(List<Long> aids);
 
     //根据Id查询路径
     @Query("select a.path from  DelPicture a where a.pid in (:pids)")
     List<String> findPathByPids(List<Long> pids);
 
     Page<DelPicture> findAllByUserId(Pageable pageable,Long userId);
+
+    List<DelPicture> findByAid(Long aid);
 
 }

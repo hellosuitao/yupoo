@@ -47,5 +47,6 @@ public interface AlbumCategoryDao extends JpaRepository<AlbumCategory, Long> {
     /*查询一级或者二级标签*/
     List<AlbumCategory> findAllByUserIdAndIsParent(Long userId,Boolean yn);
 
+    AlbumCategory findByNameAndUserId(String name,Long userId);
 
 }

@@ -1,5 +1,6 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<#import "/spring.ftl" as spring/>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=emulateIE7"/>
@@ -55,65 +56,66 @@
     <div id="bd">
         <div id="main">
             <h2 class="subfild">
-                <span>商品信息</span>
+                <span><@spring.message code="from.Product_information" /></span>
             </h2>
             <div class="subfild-content base-info">
                 <div class="kv-item ue-clear">
-                    <label><span class="impInfo">*</span>商品名称</label>
+                    <label><span class="impInfo">*</span><@spring.message code="from.goods_name" /></label>
                     <div class="kv-item-content">
-                        <input type="text" id="name" placeholder="商品名称"/>
+                        <input type="text" id="name" placeholder="<@spring.message code="from.goods_name" />"/>
                     </div>
-                    <span class="kv-item-tip">标题字数限制在(1-30)个字符</span>
+                    <span class="kv-item-tip"><@spring.message code="from.The_title_is_limited_to(1-30)characters" /></span>
                 </div>
 
                 <div class="kv-item ue-clear">
-                    <label>所在分类</label>
+                    <label><@spring.message code="from.Category" /></label>
                     <div class="kv-item-content">
                         <select id="categoryId">
-                            <option value="0">所有</option>
+                            <option value="0"><@spring.message code="from.all" /></option>
                             <#if albumCategories??>
                                 <#list albumCategories as albumCategory>
-                                    <option value="${albumCategory.id}">${albumCategory.name}</option>
+                                    <option class="categoryOption${albumCategory.id}" value="${albumCategory.id}">${albumCategory.name}</option>
                                 </#list>
                             </#if>
                         </select>
                     </div>
-<#--                    <div id="addCatagory">-->
-<#--                        <button onclick="addCatagory()"><img src="/img/skin_/ico01.png"></button>-->
-<#--                    </div>-->
+                    <div id="addCatagory">
+                        <button onclick="addCatagory()"><img src="/img/skin_/ico01.png"></button>
+                        <button onclick="deleteCatagory()"><img src="/img/skin_/ico02.png"></button>
+                    </div>
 <#--                    <span class="kv-item-tip">没有合适的分类？尝试创建一个吧</span>-->
 <#--                    <img href="/img/skin_/ico01_1.png"/>-->
                 </div>
 
                 <div class="kv-item ue-clear">
-                    <label>商品价格</label>
+                    <label><@spring.message code="from.Commodity_price" /></label>
                     <div class="kv-item-content">
-                        <input type="text" id="price" placeholder="商品价格0.01(分)-9999999.99(元)"/>
+                        <input type="text" id="price" placeholder='<@spring.message code="from.Product_price0.01(min)-9999999.99(yuan)" />'/>
                     </div>
                 </div>
 
                 <div class="kv-item ue-clear">
-                    <label>是否上架</label>
+                    <label><@spring.message code="from.Is_it_on_the_shelves" /></label>
                     <div class="kv-item-content">
                     	<span class="choose">
                             <span class="checkboxouter">
                                 <input type="radio" name="need" value="1" checked/>
                                 <span class="radio"></span>
                             </span>
-                            <span class="text">是</span>
+                            <span class="text"><@spring.message code="from.yes" /></span>
                         </span>
                         <span class="choose">
                             <span class="checkboxouter">
                                 <input type="radio" name="need" value="0"/>
                                 <span class="radio"></span>
                             </span>
-                            <span class="text">否</span>
+                            <span class="text"><@spring.message code="from.no" /></span>
                         </span>
                     </div>
                 </div>
 
                 <div class="kv-item ue-clear">
-                    <label><span class="impInfo">*</span>商品图片</label>
+                    <label><span class="impInfo">*</span><@spring.message code="from.product_picture" /></label>
                     <input id="pictures" type="file" onchange="uploadPic()" multiple="true">
                 </div>
                 <#--图片回显div-->
@@ -121,7 +123,7 @@
                 </div>
 
                 <div class="kv-item ue-clear">
-                    <label><span class="impInfo">*</span>商品视频</label>
+                    <label><span class="impInfo">*</span><@spring.message code="from.Product_video" /></label>
                     <input id="albumaudio" type="file" onchange="uploadAudio()" mutiple="true">
                 </div>
                 <#--图片回显div-->
@@ -130,14 +132,14 @@
             </div>
 
             <h2 class="subfild">
-                <span>商品描述</span>
+                <span><@spring.message code="from.product_description" /></span>
             </h2>
 
             <div class="subfild-content remarkes-info">
                 <div class="kv-item ue-clear">
-                    <label>描述内容</label>
+                    <label><@spring.message code="from.Description" /></label>
                     <div class="kv-item-content">
-                        <textarea placeholder="文章内容" id="content" name="content"
+                        <textarea placeholder='<@spring.message code="from.Article_content" />' id="content" name="content"
                                   style="width:800px;height:240px;"></textarea>
                     </div>
                 </div>
@@ -145,7 +147,7 @@
 
             <div class="buttons">
                 <#--                <input class="button" type="button" value="效果预览"/>-->
-                <input class="button" type="button" onclick="addAlbum()" value="确认上传" id="addAlbum"/>
+                <input class="button" type="button" onclick="addAlbum()" value='<@spring.message code="from.Confirm_upload" />' id="addAlbum"/>
             </div>
         </div>
     </div>
@@ -156,6 +158,16 @@
     $('select').select();
     showRemind('input[type=text],textarea', 'color5');
     UM.getEditor('content');
+
+    function deleteCatagory() {
+        var albumcategoryId = $("#categoryId").val();
+        $.post("/albumCategory/deleteByCategoryId", {"categoryId": albumcategoryId}, function (data) {
+            if (data.status == "success") {
+                alert("Delete successfully");
+                $(".categoryOption" + albumcategoryId).remove();
+            }
+        })
+    }
 
     var audiopath = "";
     var haudiopath = "";

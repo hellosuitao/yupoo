@@ -1,7 +1,6 @@
 package org.ruixun.yupoo.service.impl;
 
-import org.ruixun.yupoo.bean.Album;
-import org.ruixun.yupoo.bean.AlbumCategory;
+import org.ruixun.yupoo.bean.*;
 import org.ruixun.yupoo.dao.AlbumCategoryDao;
 import org.ruixun.yupoo.dao.AlbumDao;
 import org.ruixun.yupoo.service.AlbumCategoryService;
@@ -10,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -112,4 +112,47 @@ public class AlbumCategoryServiceImpl implements AlbumCategoryService {
     public List<AlbumCategory> findAllSecond(Long id, boolean b) {
         return albumCategoryDao.findAllByUserIdAndIsParent(id,false);
     }
+
+    @Override
+    public Boolean similarName(String name,Long userId) {
+        AlbumCategory albumCategory = albumCategoryDao.findByNameAndUserId(name, userId);
+        if(albumCategory!=null){
+            return false;
+        }
+        return true;
+    }
+
+//    @Override
+//    public void deleteCategory(Long categoryId) {
+//        AlbumCategory category = albumCategoryDao.findAlbumCategoryById(categoryId);
+//        List<Album> albumList = category.getAlbums();
+//        if(albumList!=null&&albumList.size()>0){
+//            albumList.forEach(album -> {
+//                /*批量删除评论*/
+//                List<Long> ids = new ArrayList<>();
+//                ids.add(album.getId());
+//                messagesService.delMessages(ids);
+//                /*批量删除点赞*/
+//                picStatuService.delByPids(ids);
+//                /*删除数据库图片*/
+//                List<Picture> pictures = pictureService.findPicturesByAid(album.getId());
+//                if (pictures != null && pictures.size() > 0) {
+//                    pictures.forEach(picture -> {
+//                        pictureService.deleteById(picture.getId(),album.getUid());
+//                    });
+//                }
+//                /*删除回收站图片*/
+//                List<DelPicture> delPictures = delPictureRepository.findByAid(album.getId());
+//                List<Long> pids = new ArrayList<>();
+//                if (delPictures != null && delPictures.size() > 0) {
+//                    delPictures.forEach(delPicture -> {
+//                        pids.add(delPicture.getPid());
+//                    });
+//                }
+//                delPictureService.delByPids(pids);
+//                /*批量删除商品*/
+//                albumDao.deleteById(aid);
+//            });
+//        }
+//    }
 }

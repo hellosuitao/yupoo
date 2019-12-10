@@ -38,6 +38,16 @@ public class Users implements Serializable {
     @Transient
     private String checkCode;
 
+    private String phone;
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
     public String getPassword2() {
         return password2;
     }
@@ -122,6 +132,8 @@ public class Users implements Serializable {
                 ", password='" + password + '\'' +
                 ", email='" + email + '\'' +
                 ", salt='" + salt + '\'' +
+                ", phone='" + phone + '\'' +
                 '}';
     }
+
 }

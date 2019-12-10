@@ -38,11 +38,20 @@ public class DelAudioServiceImpl implements DelAudioService {
     public void deleteById(Long id) {
         DelAudio delAudio = delAudioDao.getOne(id);
         String path = delAudio.getPath();
-        String name = path.split(staticProperties.getStaticport())[1];
-        String filePath = staticProperties.getPicturepath()+name;
+        String filePath = staticProperties.getPicturepath()+path.split(staticProperties.getStaticport())[1];
         File file = new File(filePath);
         file.delete();
         delAudioDao.deleteById(id);
+    }
+
+    @Override
+    public void deleteByAudioId(Long id) {
+        DelAudio delAudio = delAudioDao.findByAudioId(id);
+        String path = delAudio.getPath();
+        String filePath = staticProperties.getPicturepath()+path.split(staticProperties.getStaticport())[1];
+        File file = new File(filePath);
+        file.delete();
+        delAudioDao.deleteByAudioId(id);
     }
 
     @Override

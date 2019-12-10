@@ -15,13 +15,15 @@ import java.util.List;
 * */
 public interface AudioDao extends JpaRepository<Audio,Long> {
 
-    List<Audio> findAllByAid(Long aid);//根据相册id查音频
+    List<Audio> findAllByAid(Long aid);//根据商品id查音频
 
     @Modifying
     void deleteAllByAid(Long aid);
     @Modifying
     @Query("UPDATE Audio a SET a.aid = ?1 WHERE a.path = ?2")
-    void setAid(Long id, String audio);/*设置所属相册*/
+    void setAid(Long id, String audio);/*设置所属商品*/
+
+    void deleteByAidIn(List<Long> aids);
 
 
 

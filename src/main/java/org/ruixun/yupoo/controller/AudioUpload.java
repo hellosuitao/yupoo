@@ -44,9 +44,9 @@ public class AudioUpload {
 
     @RequestMapping("/audio/delete")/*视频删除*/
     @ResponseBody
-    public Result deleteAudioById(@RequestParam("id") Long id,@RequestParam("aid") Long aid,HttpServletRequest request){
+    public Result deleteAudioById(@RequestParam("id") Long id,HttpServletRequest request){
         Users user = FindUser.findUser(request);
-        audioService.deleteAudioById(id,aid,user.getId());
+        audioService.deleteAudioById(id,user.getId());
         return ResultUtils.buildSuccess();
     }
 

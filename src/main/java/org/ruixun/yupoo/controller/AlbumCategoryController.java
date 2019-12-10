@@ -36,6 +36,11 @@ public class AlbumCategoryController {
                                    HttpServletRequest request) {
         Users user = FindUser.findUser(request);
         albumCategory.setUserId(user.getId());
+        /*后台查看名字是否重复*/
+        Boolean name = albumCategoryService.similarName(albumCategory.getName(),user.getId());
+        if(!name){
+            return ResultUtils.buildFail("Simillar name");
+        }
         if (bindingResult.hasErrors()) {
             List<ObjectError> errors = bindingResult.getAllErrors();
             StringBuilder sb = new StringBuilder();
@@ -65,6 +70,14 @@ public class AlbumCategoryController {
     @ResponseBody
     public Result deleteById(@RequestParam("categoryId")Long categoryId){
         albumCategoryService.delectTable(categoryId);
+        return ResultUtils.buildSuccess();
+    }
+
+    @RequestMapping("/deleteByCategoryId")
+    @ResponseBody
+    public Result deleteByCategoryId(@RequestParam("categoryId")Long categoryId){
+//        albumCategoryService.delectTable(categoryId);
+//        albumCategoryService.deleteCategory(categoryId);
         return ResultUtils.buildSuccess();
     }
 

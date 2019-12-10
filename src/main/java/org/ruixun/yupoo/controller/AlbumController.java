@@ -31,13 +31,13 @@ import java.util.Map;
  * 作者：suitao*/
 @Controller
 public class AlbumController {/*相册控制类*/
+
     private Logger logger = LoggerFactory.getLogger(AlbumController.class);
 
     @PersistenceContext
     private EntityManager entityManager;
     @Autowired
     private AlbumService albumService;
-
     @Autowired
     private PictureService pictureService;
     @Autowired
@@ -97,7 +97,7 @@ public class AlbumController {/*相册控制类*/
     @ResponseBody
     public Result addAlbum(@RequestBody @Valid Album album, BindingResult bindingResult) {
         if (album.getAlbumCategories().get(0).getId() == 0) {
-            return ResultUtils.buildFail("分类错误！！");
+            return ResultUtils.buildFail("Please select a category");
         }
         if (bindingResult.hasErrors()) {
             List<ObjectError> errors = bindingResult.getAllErrors();
@@ -187,10 +187,11 @@ public class AlbumController {/*相册控制类*/
                          @RequestParam("inputValue") String inputValue,
                          @RequestParam(value = "page", defaultValue = "0") Integer page,
                          @RequestParam(value = "size", defaultValue = "20") Integer size,
-                         @RequestParam(value = "userId")Long userId,
+                         HttpServletRequest request,
                          ModelMap map) {
         albumService.deleteByAid(aid);
-        Page<Album> albumPage = albumService.findAlbumsByCondition2(time, categoryId, inputValue, selectBy, page, size,userId);
+        Users user = FindUser.findUser(request);
+        Page<Album> albumPage = albumService.findAlbumsByCondition2(time, categoryId, inputValue, selectBy, page, size,user.getId());
         if (albumPage != null) {
             List<Long> likes = new ArrayList<>();
             List<Long> messageSize = new ArrayList<>();
@@ -214,19 +215,20 @@ public class AlbumController {/*相册控制类*/
                                   @RequestParam(value = "inputValue", defaultValue = "") String inputValue,
                                   @RequestParam(value = "page", defaultValue = "0") Integer page,
                                   @RequestParam(value = "size", defaultValue = "6") Integer size,
-                                  @RequestParam(value = "userId")Long userid, ModelMap map) {
-
+                                  HttpServletRequest request,
+                                  ModelMap map) {
+        System.out.println(page+"-----------------------------------------------");
         if (page <= 0) {
             page = 0;
         }
+        Users user = FindUser.findUser(request);
         //如果是id查询  不需要分页
         if (selectBy.equals("id")) {
-            Page<Album> albumPage = albumService.findAlbumsByCondition2("0", 0l, "0", "", 0, 6,userid);
+            Page<Album> albumPage = albumService.findAlbumsByCondition2("0", 0l, "0", "", 0, 6,user.getId());
             Album album = albumService.findAlbumById(Long.valueOf(inputValue));
             System.out.println(album);
-            if (album != null&&album.getUid()==userid) {
+            if (album != null&&album.getUid()==user.getId()) {
                 PicStatu picStatu = statuService.findByPid(album.getId());
-                System.out.println(picStatu);
                 map.put("likes", picStatu);
                 map.put("album", album);
                 map.put("currentPage", page);
@@ -239,7 +241,7 @@ public class AlbumController {/*相册控制类*/
             }
         }
 
-        Page<Album> albumPage = albumService.findAlbumsByCondition2(time, categoryId, inputValue, selectBy, page, size,userid);
+        Page<Album> albumPage = albumService.findAlbumsByCondition2(time, categoryId, inputValue, selectBy, page, size,user.getId());
         if (albumPage.getContent().size() > 0) {
             List<Long> likes = new ArrayList<>();
             List<Long> messageSize = new ArrayList<>();
@@ -258,17 +260,18 @@ public class AlbumController {/*相册控制类*/
 
     @RequestMapping(value = "/album/deleteMany", method = RequestMethod.POST)
     //批量删除商品
-    public String deleteMany(@RequestParam(value = "userId")Long userId,
-                             @RequestParam(value = "albumIds") List<Long> albumIds,
+    public String deleteMany(@RequestParam(value = "albumIds") List<Long> albumIds,
                              @RequestParam(value = "time", defaultValue = "0") String time,
                              @RequestParam(value = "categoryId", defaultValue = "0") Long categoryId,
                              @RequestParam(value = "selectBy", defaultValue = "0") String selectBy,
                              @RequestParam("inputValue") String inputValue,
                              @RequestParam(value = "page", defaultValue = "0") Integer page,
                              @RequestParam(value = "size", defaultValue = "20") Integer size,
+                             HttpServletRequest request,
                              ModelMap map) {
         albumService.deleteByIds(albumIds);
-        Page<Album> albumPage = albumService.findAlbumsByCondition2(time, categoryId, inputValue, selectBy, page, size,userId);
+        Users user = FindUser.findUser(request);
+        Page<Album> albumPage = albumService.findAlbumsByCondition2(time, categoryId, inputValue, selectBy, page, size,user.getId());
         if (albumPage.getContent().size() > 0) {
             List<Long> likes = new ArrayList<>();
             List<Long> messageSize = new ArrayList<>();
@@ -310,9 +313,8 @@ public class AlbumController {/*相册控制类*/
             , @RequestParam(value = "condition", defaultValue = "createDate") String condition
             , @RequestParam(value = "albumCategory", defaultValue = "0") String albumCategory, ModelMap map) {
         Users user = FindUser.findUser(request);
-        List<AlbumCategory> albumCategories = albumCategoryService.findAll();
+        List<AlbumCategory> albumCategories = albumCategoryService.findAllSecond(user.getId(),false);
         map.put("albumCategories", albumCategories);
-
         Page<Album> albumPage = albumService.findAll(page, size, "id", albumCategory,user.getId());
         System.out.println(albumPage.getContent());
         if (albumPage.getContent().size() > 0) {
@@ -384,12 +386,12 @@ public class AlbumController {/*相册控制类*/
         String uri = "http://" + InetAddress.getLocalHost().getHostAddress() + ":" + request.getLocalPort();
         map.put("imgUrl", uri);
         Page<Album> albumPage = albumService.findAll(page, 6, "id", albumCategory,0l);
-        List<AlbumCategory> all = albumCategoryService.findAll();
+        List<AlbumCategory> albumCategories = albumCategoryService.findAllSecond(user.getId(),false);
         List<PicStatu> picStatuByPid = statuService.findPicStatuByPid(albumPage.getContent());
 
             System.out.println(albumPage.getContent());
             map.put("albumPage", albumPage);
-            map.put("albumCategory", all);
+            map.put("albumCategory", albumCategories);
             map.put("picStatuByPidS", picStatuByPid);
 //            System.out.println(albumPage.getPageable());
 //            System.out.println(albumPage.getSize());
@@ -411,10 +413,10 @@ public class AlbumController {/*相册控制类*/
 
         if (albums != null) {
             map.put("albumPage", albums);
-            List<AlbumCategory> all = albumCategoryService.findAll();
+            List<AlbumCategory> albumCategories = albumCategoryService.findAllSecond(user.getId(),false);
             List<PicStatu> picStatuByPid = statuService.findPicStatuByPid(albums.getContent());
             map.put("picStatuByPidS", picStatuByPid);
-            map.put("albumCategory", all);
+            map.put("albumCategory", albumCategories);
             map.put("albumCategoryId", 1);
             return "category";
         }
@@ -437,10 +439,10 @@ public class AlbumController {/*相册控制类*/
             map.put("user", user);
         }
         Page<Album> albumPage = albumService.findAll(page, size, "id", albumCategory,1l);
-        List<AlbumCategory> all = albumCategoryService.findAll();
+        List<AlbumCategory> albumCategories = albumCategoryService.findAllSecond(user.getId(),false);
         List<PicStatu> picStatuByPid = statuService.findPicStatuByPid(albumPage.getContent());
         map.put("picStatuByPidS", picStatuByPid);
-        map.put("albumCategory", all);
+        map.put("albumCategory", albumCategories);
         map.put("albumPage", albumPage);
         map.put("albumCategoryId", albumCategory);
         return "category";
@@ -449,17 +451,7 @@ public class AlbumController {/*相册控制类*/
 
     @RequestMapping("/album/updateAlbum")
     @ResponseBody
-    public Result updateAlbum(@RequestBody @Valid Album album, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            List<ObjectError> errors = bindingResult.getAllErrors();
-            StringBuilder sb = new StringBuilder();
-            for (ObjectError error : errors) {
-                String message = error.getDefaultMessage();
-                sb.append(message + ",");
-            }
-            errors.forEach(error -> sb.append(error + ","));
-            return ResultUtils.buildFail(sb.toString());
-        }
+    public Result updateAlbum(@RequestBody Album album) {
         albumService.updateAlbum(album);
         return ResultUtils.buildSuccess();
     }
@@ -467,32 +459,10 @@ public class AlbumController {/*相册控制类*/
 
     @RequestMapping("/album/editAlbum")
     public String editALbum(@RequestParam("id") Long id, ModelMap map, HttpServletRequest request) throws UnknownHostException {
+        Users user = FindUser.findUser(request);
         Album album = albumService.findAlbumById(id);
         List<Picture> pictures = pictureService.findPicturesByAid(id);
-//        List<Picture> fakePics = new ArrayList<Picture>();
-//        pictures.forEach(picture -> {
-//            Picture temp = new Picture();
-//            BeanUtils.copyProperties(picture, temp);
-//            fakePics.add(temp);
-//        });
-//        SerializationUtils.clone();
-//        Collections.copy(fakePics,pictures);
-//        fakePics.addAll(pictures);//浅copy
-//        String uri = "http://" + InetAddress.getLocalHost().getHostAddress() + ":" + request.getLocalPort();
-//        fakePics.forEach(fakePic -> {
-//            fakePic.setPath(uri + fakePic.getPath());
-//        });
-//        pictures.forEach(System.out::println);
-//        fakePics.forEach(System.out::println);
-        List<AlbumCategory> albumCategories = albumCategoryService.findAll();
-//        String[] strings = album.getPictures().split(",");
-//        String beforePics = "";
-//        for (int i = 0; i < strings.length; i++) {
-//            if (!strings[i].equals("")&&strings[i]!=null) {
-//                beforePics = beforePics + uri + strings[i] + ",";
-//            }
-//        }
-//        System.out.println(beforePics);
+        List<AlbumCategory> albumCategories = albumCategoryService.findAllSecond(user.getId(),false);
         List<Audio> audios = audioService.findAudioById(id);
         String beforeAudios ="";
         for (Audio audio : audios) {

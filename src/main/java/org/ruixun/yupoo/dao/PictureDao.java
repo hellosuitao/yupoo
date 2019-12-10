@@ -35,4 +35,9 @@ public interface PictureDao extends JpaRepository<Picture,Long> {/*图片dao*/
 
     @Modifying
     void deleteByAid(Long aid);
+
+    @Modifying
+    void deleteById(Long id);
+
+    Picture findPictureByPath(String path);
 }

@@ -26,7 +26,6 @@ public class Album{/*商品类*/
     @Length(min = 1,max = 30)//,message = "商品名的长度不符")
     private String name;/*商品名*/
     private Long open;/*是否上架 0 否 1 是*/
-    @NotEmpty
     private String description="";//相册描述  不能用desc  会报错
     @Column(name = "create_date")
     private Date createDate;/*创建时间*/

@@ -130,7 +130,7 @@
                             <th>商品价格</th>
                             <th>商品分类</th>
                             <th>商品描述</th>
-                            <th>点赞/评论</th>
+                            <th>点赞/评论/分享</th>
                             <th>上架时间</th>
                             <th>上架状态</th>
                             <th>操作</th>
@@ -146,7 +146,7 @@
                                 <td>${album.price}</td>
                                 <td>${album.albumCategories[0].name}</td>
                                 <td>${album.description}</td>
-                                <td><span id="looknum${album_index}">${likes[album_index].upnum}</span>/<span id="upnum${album_index}">${likes[album_index].looknum}</span></td>
+                                <td><span id="looknum${album_index}">${likes[album_index].upnum}</span>/<span id="upnum${album_index}">${likes[album_index].looknum}</span>/<span id="share${album_index}">${likes[album_index].share}</span></td>
                                 <td>${album.createDate}</td>
                                 <td id="${album.id}">${album.open}</td>
                                 <td>
@@ -169,21 +169,20 @@
                                                 <form id="picStatu${album_index}">
                                                     <div class="modal-body">
                                                         <div class="form-group">
-                                                            <input type="hidden" value="${album.id}" name="pid" >
+                                                            <input type="hidden" value="${album.id}" id="pid${album_index}" >
                                                             <label for="edit_customerName" class="col-sm-2 control-label">点赞数</label>
                                                             <div class="col-sm-10">
-                                                                <input type="text" class="form-control" id="categoryName" placeholder="点赞数" value="${likes[album_index].upnum}"
+                                                                <input type="text" class="form-control" id="luo${album_index}" placeholder="点赞数" value="${likes[album_index].upnum}"
                                                                        name="upnum"/>
                                                             </div>
                                                             <label for="edit_customerName" class="col-sm-2 control-label">浏览数</label>
                                                             <div class="col-sm-10">
-                                                                <input type="text" class="form-control" id="categoryName" placeholder="浏览数" value="${likes[album_index].looknum}"
+                                                                <input type="text" class="form-control" id="yu${album_index}" placeholder="浏览数" value="${likes[album_index].looknum}"
                                                                        name="looknum"/>
                                                             </div>
-
                                                             <label for="edit_customerName" class="col-sm-2 control-label">分享数</label>
                                                             <div class="col-sm-10">
-                                                                <input type="text" class="form-control" id="categoryName" placeholder="分享数" value="${likes[album_index].looknum}"
+                                                                <input type="text" class="form-control" id="qiu${album_index}" placeholder="分享数" value="${likes[album_index].share}"
                                                                        name="share"/>
                                                             </div>
                                                         </div>
@@ -214,90 +213,11 @@
                     <#elseif (currentPage<=2)&&(totalPages>5)>
                         <nav aria-label="Page navigation">
                             <ul class="pagination">
-                                <li><a onclick="findByPage(1);">1</a>
-                                </li>
-                                <li><a onclick="findByPage(2);">2</a>
-                                </li>
-                                <li><a onclick="findByPage(3);">3</a>
-                                </li>
-                                <li><a onclick="findByPage(4);">4</a>
-                                </li>
-                                <li><a onclick="findByPage(5);">5</a>
-                                </li>
-                                <li><a onclick="findByPage(${currentPage+1});"
-                                       aria-label="Next">下一页</a></li>
-                                <li><a onclick="findByPage(${totalPages});"
-                                       aria-label="Next">尾页</a>
-                                </li>
-                            </ul>
-                        </nav>
-                    <#--最后一页不到5页-->
-                    <#elseif (currentPage>=totalPages-2)&&(totalPages<=5)>
-                        <nav aria-label="Page navigation">
-                            <ul class="pagination">
-                                <#list 1..totalPages as i>
-                                    <li><a onclick="findByPage(i);">${i}</a></li>
+                                <#list 1..5 as i>
+                                    <li><a onclick="findByPage(${i})">${i}</a></li>
                                 </#list>
-                            </ul>
-                        </nav>
-                    <#--最后一页超过5页-->
-                    <#elseif (currentPage>=totalPages-2)&&(totalPages>5)>
-                        <nav aria-label="Page navigation">
-                            <ul class="pagination">
-                                <li>
-                                    <a onclick="findByPage(1);" aria-label="Previous">
-                                        首页
-                                    </a>
-                                </li>
-                                <li>
-                                    <a onclick="findByPage(${currentPage-1})" ; aria-label="Previous">
-                                        上一页
-                                    </a>
-                                </li>
-                                <li><a onclick="findByPage(${currentPage-4});">${currentPage-4}</a>
-                                </li>
-                                <li><a onclick="findByPage(${currentPage-3});">${currentPage-3}</a>
-                                </li>
-                                <li><a onclick="findByPage(${currentPage-2});">${currentPage-2}</a>
-                                </li>
-                                <li><a onclick="findByPage(${currentPage-1});">${currentPage-1}</a>
-                                </li>
-                                <li><a onclick="findByPage(${currentPage});">${currentPage}</a>
-                                </li>
-                            </ul>
-                        </nav>
-                    <#--超过5页-->
-                    <#else>
-                        <nav aria-label="Page navigation">
-                            <ul class="pagination">
-                                <li>
-                                    <a onclick="findByPage(1);" aria-label="Previous">
-                                        首页
-                                    </a>
-                                </li>
-                                <li>
-                                    <a onclick="findByPage(${currentPage-1});" aria-label="Previous">
-                                        上一页
-                                    </a>
-                                </li>
-                                <li><a onclick="findByPage(${currentPage-2});">${currentPage-2}</a>
-                                </li>
-                                <li><a onclick="findByPage(${currentPage-1});">${currentPage-1}</a>
-                                </li>
-                                <li><a onclick="findByPage(${currentPage});">${currentPage}</a></li>
-                                <li><a onclick="findByPage(${currentPage+1});">${currentPage+1}</a>
-                                </li>
-                                <li><a onclick="findByPage(${currentPage+2});">${currentPage+2}</a>
-                                </li>
-                                <li>
-                                    <a onclick="findByPage(${currentPage+1});" aria-label="Next">
-                                        下一页
-                                    </a>
-                                </li>
-                                <li>
-                                    <a onclick="findByPage(${totalPages});" aria-label="Next">
-                                        尾页
-                                    </a>
+                                <li><a onclick="findByPage(${currentPage+2})">下一页</a></li>
+                                <li><a onclick="findByPage(${totalPages})">尾页</a>
                                 </li>
                             </ul>
                         </nav>
@@ -322,10 +242,10 @@
         var pid=$("#pid"+id).val().replace(new RegExp(",","g"),"");
         $.post("/updateLuo",{"pid":pid,"upnum" :upnum,"looknum":looknum,"share":share},function (data) {
             if(data!=null){
-                alert("修改成功")
-                window.location.href = "/album/findAll?page=${currentPage}"
+                alert("修改成功");
+                window.location.reload();
             }else {
-                alert("修改失败")
+                alert("修改失败");
                 window.location.href = "/album/findAll"
             }
         })
@@ -344,11 +264,10 @@
         var open = $(":input[name='need']:checked").val();
         var description = $('textarea[name="content"]').val();
         var albumId = $("#albumId").val().replace(new RegExp(",","g"),"");
-        pictures = $("#beforePictures").val();
         var album = JSON.stringify({
             'id': albumId, 'albumCategories': [{'id': $("#categoryId").val()}],
             'name': name, 'price': price * 100, 'open': open, 'description': description,
-            'pictures': pictures,'audios':haudiopath
+            'pictures': hpictures,'audios':haudiopath
         })
         $.ajax({
             url: "/album/updateAlbum",
@@ -368,32 +287,20 @@
         });
     }
 
-
-    var newPage = "";
-
     /*图片删除*/
     function delPic(picId) {
-        var aid = $("#albumId").val().replace(new RegExp(",","g"),"");
-        var beforePicture = $("#beforePictures").val();
-        var delPic = document.getElementById(picId).src;
         $("#" + picId).next().next().remove();
         $("#" + picId).next().remove();
         $("#" + picId).remove();
-        var splitPic = beforePicture.split(",");
-        for (var i = 0; i < splitPic.length; i++) {
-            if (splitPic[i] != "") {
-                if (splitPic[i] != delPic) {
-                    newPage = newPage + splitPic[i] + ",";
-                }
-            }
-        }
-        $.post("/picture/delete", {id: picId, aid: $("#albumId").val().replace(new RegExp(",","g"),"")}, function () {
-            $("#beforePictures").val(newPage);
+        $.post("/picture/delete", {id: picId}, function () {
         });
     }
 
+    /*后台返回的视频路径*/
     var audiopath = "";
+    /*传递给后台的视频路径*/
     var haudiopath ="";
+    /*临时视频类型*/
     var tempType="";
     /*上传视频*/
     function uploadAudio() {
@@ -419,7 +326,6 @@
             success: function (data) {
                 if (data.status == "success") {
                     audiopath = data.data;
-                    alert("视频上传成功！！！");
                     if (!haudiopath) {
                         haudiopath = audiopath+",";
                     } else {
@@ -454,18 +360,18 @@
 
     /*删除视频*/
     function delAudio(audioId){
-        var aid = $("#albumId").val().replace(new RegExp(",","g"),"");
         $("#" + audioId).next().remove();
         $("#" + audioId).remove();
-        $.post("/audio/delete", {id: audioId,aid:aid}, function () {
+        $.post("/audio/delete", {id: audioId}, function () {
         });
     }
 
+    /*后台返回的图片路径*/
     var pictures = "";
-
+    /*传递给后台的路径*/
+    var hpictures = "";
     /*编辑里面的添加图片方法*/
     function addPic() {
-        var newPage = $("#beforePictures").val();
         var formData = new FormData();
         var img_file = document.getElementById("pictures");
         var fileObj;
@@ -491,8 +397,11 @@
             success: function (data) {
                 if (data.status == "success") {
                     pictures = data.data;
-                    newPage = newPage + data.data;
-                    $("#beforePictures").val(newPage);
+                    if (!hpictures) {
+                        hpictures = pictures;
+                    } else {
+                        hpictures = hpictures + pictures;
+                    }
                     reshow();
                 } else if (data.message != null) {
                     alert(data.message);
@@ -503,6 +412,7 @@
         });
     };
 
+    /*图片回显*/
     function reshow() {
         var paths = pictures.split(",");
         var newImg = "";
@@ -529,9 +439,6 @@
         var inputValue = $("#selectinfo").val();
         var page = aPage - 1;
         var size = 6;
-        var userId=localStorage.getItem("userId");
-        // alert("访问数据库页数" + page + "time:" + time + "categoryId:" +
-        //     categoryId + "selectBy:" + selectBy + "inputvalue:" + inputValue + "size:" + size);
         $.ajax({
             url: "/album/findByCondition",
             type: "POST",
@@ -542,8 +449,7 @@
                 "selectBy": selectBy,
                 "inputValue": inputValue,
                 "page": page,
-                "size": size,
-                "uid":userId
+                "size": size
             },
             success: function (data) {
                 $("#tableftl").html(data);
@@ -624,12 +530,11 @@
             albumIds.push($(this).val().replace(new RegExp(",","g"),""));
         });
         var time = $(":input[name='time']:checked").val();
-        var categoryId = $("#categoryId").val();
-        var selectBy = $("#selectBy").val();
+        var categoryId = $("#categoryId").val().replace(new RegExp(",","g"),"");
+        var selectBy = $("#selectBy").val().replace(new RegExp(",","g"),"");
         var inputValue = $("#selectinfo").val();
         var page = 0;
         var size = 6;
-        var userId = localStorage.getItem("userId");
         if (window.confirm("确认操作？")) {
             if (albumIds.length >= 1) {
                 $.ajax({
@@ -642,8 +547,7 @@
                         "inputValue": inputValue,
                         "page": page,
                         "size": size,
-                        "albumIds": albumIds,
-                        "userId":userId
+                        "albumIds": albumIds
                     },
                     traditional: true,
                     success: function (data) {
@@ -663,10 +567,9 @@
 
     /*删除商品*/
     function btnDelete(id) {
-        var uid =localStorage.getItem("userId");
         var time = $(":input[name='time']:checked").val();
-        var categoryId = $("#categoryId").val().toString();
-        var selectBy = $("#selectBy").val();
+        var categoryId = $("#categoryId").val().replace(new RegExp(",","g"),"");
+        var selectBy = $("#selectBy").val().replace(new RegExp(",","g"),"");
         var inputValue = $("#selectinfo").val();
         var page = 0;
         var size = 6;
@@ -681,8 +584,7 @@
                     "selectBy": selectBy,
                     "inputValue": inputValue,
                     "page": page,
-                    "size": size,
-                    "userId":uid
+                    "size": size
                 },
                 success: function (data) {
                     alert("商品删除成功!")
@@ -695,12 +597,11 @@
     /*搜索*/
     $(".button").click(function () {
         var time = $(":input[name='time']:checked").val();
-        var categoryId = $("#categoryId").val();
-        var selectBy = $("#selectBy").val();
+        var categoryId = $("#categoryId").val().replace(new RegExp(",","g"),"");
+        var selectBy = $("#selectBy").val().replace(new RegExp(",","g"),"");
         var inputValue = $("#selectinfo").val();
         var page = 0;
         var size = 6;
-        var userId=localStorage.getItem("userId");
         $.ajax({
             url: "/album/findByCondition",
             type: "POST",
@@ -710,8 +611,7 @@
                 "selectBy": selectBy,
                 "inputValue": inputValue,
                 "page": page,
-                "size": size,
-                "userId":userId
+                "size": size
             },
             success: function (data) {
                 $("#tableftl").html(data);

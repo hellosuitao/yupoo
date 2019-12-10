@@ -1,4 +1,5 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<#import "/spring.ftl" as spring/>
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
 		<meta charset="utf-8">
@@ -199,19 +200,19 @@
 		<div class="container">
 			<div class="main">
 				<h2 class="subfild">
-					<span>视频回收</span>
+					<span><@spring.message code="recyclebinAudio.Video_recycling"/></span>
 				</h2>
 				<div id="toolbar">
 					<ul>
-						<li id="clear"><img src="/recyclebin/clear.png">清空</li>
+						<li id="clear"><img src="/recyclebin/clear.png"><@spring.message code="recyclebinAudio.Clear"/></li>
 						<#if dels.totalElements % dels.size=1 && dels.number+1 == dels.totalPages  >
-						<li id="multirefresh"  onclick="insIds(${dels.getNumber()})" ><img src="/recyclebin/restore32.png" >批量恢复</li>
-						<li id="multidelete"   onclick="delIds(${dels.getNumber()})" ><img src="/recyclebin/delete32.png" >批量删除</li>
+						<li id="multirefresh"  onclick="insIds(${dels.getNumber()})" ><img src="/recyclebin/restore32.png" ><@spring.message code="recyclebinAudio.Bulk_recovery"/></li>
+						<li id="multidelete"   onclick="delIds(${dels.getNumber()})" ><img src="/recyclebin/delete32.png" ><@spring.message code="recyclebinAudio.batch_deletion"/></li>
 							<#else >
-								<li id="multirefresh"  onclick="insIds(${dels.getNumber()+1})" ><img src="/recyclebin/restore32.png" >批量恢复</li>
-								<li id="multidelete"   onclick="delIds(${dels.getNumber()+1})" ><img src="/recyclebin/delete32.png" >批量删除</li>
+								<li id="multirefresh"  onclick="insIds(${dels.getNumber()+1})" ><img src="/recyclebin/restore32.png" ><@spring.message code="recyclebinAudio.Bulk_recovery"/></li>
+								<li id="multidelete"   onclick="delIds(${dels.getNumber()+1})" ><img src="/recyclebin/delete32.png" ><@spring.message code="recyclebinAudio.batch_deletion"/></li>
 						</#if>
-						<li id="select" onclick="select()"><img src="/recyclebin/select.png" >操作</li>
+						<li id="select" onclick="select()"><img src="/recyclebin/select.png" ><@spring.message code="recyclebinAudio.operating"/></li>
 					</ul>		
 				</div>
 
@@ -228,8 +229,8 @@
 								<source src="${a.path}" type="video/mp4">
 								<source src="${a.path}" type="video/ogg">
 								<source src="${a.path}" type="video/webm">
-								<object data="${a.path}" width="100%" height="100%">
-									<embed src="${a.path}" width="100%" height="100%">
+								<object data="${a.path}">
+									<embed src="${a.path}">
 								</object>
 							</video>
 						</div>
@@ -238,11 +239,11 @@
 <#--						<input type="video" src="${a.path}" style="width:  140px;-->
 <#--                                                                   height: 260px;">-->
 						<#if dels.totalElements % dels.size=1 && dels.number+1 == dels.totalPages  >
-						<button class="refresh" type="button" onclick="ins(${a.audioId},${dels.getNumber()})">恢复</button>
-						<button class="delete"  type="button" onclick="del(${a.audioId},${dels.getNumber()})">删除</button>
+						<button class="refresh" type="button" onclick="ins(${a.audioId},${dels.getNumber()})"><@spring.message code="recyclebinAudio.restore"/></button>
+						<button class="delete"  type="button" onclick="del(${a.audioId},${dels.getNumber()})"><@spring.message code="recyclebinAudio.delete"/></button>
 						<#else >
-						<button class="refresh" type="button" onclick="ins(${a.audioId},${dels.getNumber()+1})">恢复</button>
-						<button class="delete"  type="button" onclick="del(${a.audioId},${dels.getNumber()+1})">删除</button>
+						<button class="refresh" type="button" onclick="ins(${a.audioId},${dels.getNumber()+1})"><@spring.message code="recyclebinAudio.restore"/></button>
+						<button class="delete"  type="button" onclick="del(${a.audioId},${dels.getNumber()+1})"><@spring.message code="recyclebinAudio.delete"/></button>
 						</#if><br />
 					</div>
 				</#list>
@@ -251,7 +252,7 @@
 				<nav class="navi">
 					<#if dels.getTotalPages()=0 >
 					<span style="text-align: center;
-                                 width: 100%;"><h2>回收站空空如也</h2></span>
+                                 width: 100%;"><h2><@spring.message code="recyclebinAudio.Recycle_Bin_is_empty"/></h2></span>
 					</#if>
 					<ul>
 						<li>
@@ -312,8 +313,6 @@
 						</li>
 					</ul>
 				</nav>
-
-
 			</div>
 		</div>
 
@@ -401,7 +400,8 @@
 			})
 		}
 		function search(page) {
-			$.post("/delAudio/findAll",{
+			var l = localStorage.getItem("language");
+			$.post("/delAudio/findAll?l="+l,{
 			    "page":page-1,
 			},function (data) {
 				$("html").empty();

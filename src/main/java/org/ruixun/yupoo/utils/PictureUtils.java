@@ -12,7 +12,6 @@ public class PictureUtils {
         List<Picture> list = new ArrayList<>();
         for (DelPicture delpicture:delPictures) {
             Picture picture = new Picture();
-            System.out.println(delpicture);
             picture.setId(delpicture.getPid());
             picture.setAid(delpicture.getAid());
             picture.setName(delpicture.getName());

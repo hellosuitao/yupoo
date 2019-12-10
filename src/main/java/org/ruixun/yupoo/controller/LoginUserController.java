@@ -1,18 +1,19 @@
 package org.ruixun.yupoo.controller;
 
+import org.apache.catalina.User;
 import org.ruixun.yupoo.bean.Users;
 import org.ruixun.yupoo.service.LoginUserService;
 import org.ruixun.yupoo.utils.CustomException;
+import org.ruixun.yupoo.utils.FindUser;
 import org.ruixun.yupoo.utils.Result;
 import org.ruixun.yupoo.utils.ResultUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -120,7 +121,4 @@ public class LoginUserController {
         return ResultUtils.buildFail("access fail");
 
     }
-
-
-
 }

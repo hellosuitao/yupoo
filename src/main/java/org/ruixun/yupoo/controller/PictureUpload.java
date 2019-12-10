@@ -31,22 +31,7 @@ public class PictureUpload {/*上传图片*/
     //此id为商品id
     @ResponseBody
     public Result upload(MultipartFile[] file, HttpServletRequest request) throws Exception {
-        if(file.length>10){
-            return ResultUtils.buildFail("max upload files amount : 10");
-        }
         String picturess = surplusCapacityService.addPictures(file, 0l, 1l, Long.valueOf(0l));
-//        System.out.println(picturess);
-//        String[] strings = picturess.split(",");
-//        String pictures="";
-//        String uri = "http://"+ InetAddress.getLocalHost().getHostAddress()+":"+request.getLocalPort();
-//        for (int i = 0; i < strings.length; i++) {
-//            if(!strings[i].equals("")&&strings[i]!=null){
-//                System.out.println(strings[i]);
-//                pictures =pictures+ uri+strings[i]+",";
-//            }
-//        }
-//        System.out.println(pictures);
         return ResultUtils.buildSuccess(picturess);
     }
-
 }

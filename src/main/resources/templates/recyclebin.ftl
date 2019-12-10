@@ -1,4 +1,5 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<#import "/spring.ftl" as spring/>
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
 		<meta charset="utf-8">
@@ -217,19 +218,19 @@
 		<div class="container">
 			<div class="main">
 				<h2 class="subfild">
-					<span>图片回收</span>
+					<span><@spring.message code="recyclebin.Picture_recycling" /></span>
 				</h2>
 				<div id="toolbar">
 					<ul>
-						<li id="clear"><img src="/recyclebin/clear.png">清空</li>
+						<li id="clear"><img src="/recyclebin/clear.png"><@spring.message code="recyclebin.Clear" /></li>
 						<#if dels.totalElements % dels.size=1 && dels.number+1 == dels.totalPages  >
-						<li id="multirefresh"  onclick="insIds(${dels.getNumber()})" ><img src="/recyclebin/restore32.png" >批量恢复</li>
-						<li id="multidelete"   onclick="delIds(${dels.getNumber()})" ><img src="/recyclebin/delete32.png" >批量删除</li>
+						<li id="multirefresh"  onclick="insIds(${dels.getNumber()})" ><img src="/recyclebin/restore32.png" ><@spring.message code="recyclebin.Bulk_recovery" /></li>
+						<li id="multidelete"   onclick="delIds(${dels.getNumber()})" ><img src="/recyclebin/delete32.png" ><@spring.message code="recyclebin.batch_deletion" /></li>
 							<#else >
-								<li id="multirefresh"  onclick="insIds(${dels.getNumber()+1})" ><img src="/recyclebin/restore32.png" >批量恢复</li>
-								<li id="multidelete"   onclick="delIds(${dels.getNumber()+1})" ><img src="/recyclebin/delete32.png" >批量删除</li>
+								<li id="multirefresh"  onclick="insIds(${dels.getNumber()+1})" ><img src="/recyclebin/restore32.png" ><@spring.message code="recyclebin.Bulk_recovery" /></li>
+								<li id="multidelete"   onclick="delIds(${dels.getNumber()+1})" ><img src="/recyclebin/delete32.png" ><@spring.message code="recyclebin.batch_deletion" /></li>
 						</#if>
-						<li id="select" onclick="select()"><img src="/recyclebin/select.png" >操作</li>
+						<li id="select" onclick="select()"><img src="/recyclebin/select.png" ><@spring.message code="recyclebin.operating" /></li>
 					</ul>		
 				</div>
 
@@ -238,7 +239,7 @@
 					<div class="pic" id="01">
 						<i class="pid">${a.pid}</i><br />
 						<div class="hide">
-							选择
+							<@spring.message code="recyclebin.select" />
 							<input type="checkbox" class="xuanze" id="${a.pid}"/>
 
 						</div>
@@ -246,11 +247,11 @@
 						<input type="image" src="${a.path}" style="width:  140px;
                                                                    height: 260px;">
 						<#if dels.totalElements % dels.size=1 && dels.number+1 == dels.totalPages  >
-						<button class="refresh" type="button" onclick="ins(${a.getPid()},${dels.getNumber()})">恢复</button>
-						<button class="delete"  type="button" onclick="del(${a.getPid()},${dels.getNumber()})">删除</button>
+						<button class="refresh" type="button" onclick="ins(${a.getPid()},${dels.getNumber()})"><@spring.message code="recyclebin.restore" /></button>
+						<button class="delete"  type="button" onclick="del(${a.getPid()},${dels.getNumber()})"><@spring.message code="recyclebin.delete" /></button>
 						<#else >
-						<button class="refresh" type="button" onclick="ins(${a.getPid()},${dels.getNumber()+1})">恢复</button>
-						<button class="delete"  type="button" onclick="del(${a.getPid()},${dels.getNumber()+1})">删除</button>
+						<button class="refresh" type="button" onclick="ins(${a.getPid()},${dels.getNumber()+1})"><@spring.message code="recyclebin.restore" /></button>
+						<button class="delete"  type="button" onclick="del(${a.getPid()},${dels.getNumber()+1})"><@spring.message code="recyclebin.delete" /></button>
 						</#if><br />
 					</div>
 				</#list>
@@ -259,7 +260,7 @@
 				<nav class="navi">
 					<#if dels.getTotalPages()=0 >
 					<span style="text-align: center;
-                                 width: 100%;"><h2>回收站空空如也</h2></span>
+                                 width: 100%;"><h2><@spring.message code="recyclebin.Recycle_Bin_is_empty" /></h2></span>
 					</#if>
 					<ul>
 						<li>
@@ -416,8 +417,9 @@
 			})
 		}
 		function search(page) {
+			var l = localStorage.getItem("language");
             // alert(page);
-			$.post("/delPic/findAll",{
+			$.post("/delPic/findAll?l="+l,{
 			    "page":page-1,
 			},function (data) {
 				$("html").empty();

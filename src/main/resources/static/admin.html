@@ -13,6 +13,13 @@
 <!-- 页面作者：YangYuxuan -->
     <script type="text/javascript">
         $(window).load(function(){
+
+            //拿到全局变量 l
+            var l = localStorage.getItem("language");
+            alert("语言是" + l);
+            //获取iframe,并修改src值
+            $("#mainIframe").attr("src","navGo?l=" + l);
+
             var username = localStorage.getItem("username");
             var userId = localStorage.getItem("userId");
             if(username){
